@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyRef · Python 速查手册</title>
+<style>
+  :root{
+    --bg:#f6f8fa; --panel:#ffffff; --text:#1f2328; --muted:#57606a;
+    --border:#d8dee4; --accent:#3776ab; --accent2:#ffd43b;
+    --code-bg:#f0f2f5; --code-border:#dfe3e8;
+    --kw:#1a73e8; --kw-bg:#e8f0fe; --bi:#137333; --bi-bg:#e6f4ea;
+    --mo:#b06000; --mo-bg:#fef7e0; --sy:#7627bb; --sy-bg:#f3e8fd;
+    --note-bg:#fff8e1; --note-border:#f0d264;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:-apple-system,"Segoe UI","Microsoft YaHei",Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.6;}
+  code,pre,.mono{font-family:Consolas,"JetBrains Mono",Menlo,monospace;}
+
+  header{position:sticky; top:0; z-index:10; background:var(--panel); border-bottom:1px solid var(--border); padding:14px 16px 10px;}
+  .wrap{max-width:920px; margin:0 auto;}
+  .logo{font-size:20px; font-weight:700; display:flex; align-items:center; gap:8px;}
+  .logo .py{width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,#3776ab 50%,#ffd43b 50%); display:inline-block;}
+  .logo small{font-weight:400; color:var(--muted); font-size:13px;}
+  .searchbox{margin-top:10px; display:flex; gap:8px; align-items:center; background:var(--bg); border:1.5px solid var(--border); border-radius:10px; padding:10px 14px;}
+  .searchbox:focus-within{border-color:var(--accent);}
+  .searchbox input{flex:1; border:none; outline:none; background:transparent; font-size:17px; color:var(--text);}
+  .searchbox kbd{background:#fff; border:1px solid var(--border); border-radius:5px; padding:1px 7px; font-size:12px; color:var(--muted);}
+  .stats{margin-top:8px; font-size:12.5px; color:var(--muted);}
+  .chips{margin-top:8px; display:flex; flex-wrap:wrap; gap:6px;}
+  .chip{font-size:12.5px; background:var(--panel); border:1px solid var(--border); border-radius:999px; padding:2px 12px; cursor:pointer; color:var(--text);}
+  .chip:hover{border-color:var(--accent); color:var(--accent);}
+
+  main{max-width:920px; margin:18px auto 60px; padding:0 16px;}
+  .cat-head{display:flex; align-items:center; gap:8px; margin:22px 0 8px;}
+  .cat-head h2{font-size:16px;}
+  .cat-head .cnt{font-size:12px; color:var(--muted); background:var(--bg); border-radius:999px; padding:0 8px;}
+  .row{display:flex; align-items:baseline; gap:10px; background:var(--panel); border:1px solid var(--border); border-radius:8px; padding:8px 14px; margin-bottom:6px; cursor:pointer;}
+  .row:hover{border-color:var(--accent);}
+  .row.sel{border-color:var(--accent); box-shadow:0 0 0 2px rgba(55,118,171,.18);}
+  .row .nm{font-family:Consolas,Menlo,monospace; font-weight:700; font-size:14.5px; white-space:nowrap;}
+  .row .ds{color:var(--muted); font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .badge{display:inline-block; font-size:11.5px; border-radius:5px; padding:0 7px; line-height:20px; vertical-align:middle; white-space:nowrap;}
+  .badge.keyword{color:var(--kw); background:var(--kw-bg);}
+  .badge.builtin{color:var(--bi); background:var(--bi-bg);}
+  .badge.module{color:var(--mo); background:var(--mo-bg);}
+  .badge.syntax{color:var(--sy); background:var(--sy-bg);}
+  .vbadge{font-size:11px; color:#c25000; background:#fdf0e3; border-radius:5px; padding:0 6px; line-height:18px; white-space:nowrap;}
+
+  .detail{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:22px 26px;}
+  .back{display:inline-block; cursor:pointer; color:var(--accent); font-size:13.5px; margin-bottom:12px; user-select:none;}
+  .back:hover{text-decoration:underline;}
+  .d-title{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .d-title h1{font-family:Consolas,Menlo,monospace; font-size:26px;}
+  .d-desc{color:var(--muted); margin-top:4px;}
+  .sect{margin-top:18px;}
+  .sect h3{font-size:14px; color:var(--accent); margin-bottom:8px; display:flex; align-items:center; gap:6px;}
+  .sect h3::before{content:""; width:4px; height:14px; background:var(--accent); border-radius:2px; display:inline-block;}
+  pre{background:var(--code-bg); border:1px solid var(--code-border); border-radius:8px; padding:12px 14px; overflow-x:auto; font-size:13.5px; line-height:1.55; position:relative;}
+  .cblock{position:relative; margin-bottom:14px;}
+  .cblock .ct{font-size:12.5px; color:var(--muted); margin-bottom:4px;}
+  .cbtn{position:absolute; top:28px; right:8px; font-size:11.5px; background:#fff; border:1px solid var(--border); border-radius:6px; padding:2px 10px; cursor:pointer; color:var(--muted);}
+  .cbtn:hover{color:var(--accent); border-color:var(--accent);}
+  table.apis{width:100%; border-collapse:collapse; font-size:13px;}
+  table.apis th{background:var(--bg); text-align:left; padding:7px 10px; border:1px solid var(--border); font-size:12.5px;}
+  table.apis td{padding:6px 10px; border:1px solid var(--border); vertical-align:top;}
+  table.apis td:first-child{font-family:Consolas,Menlo,monospace; white-space:nowrap; font-weight:600;}
+  .note{background:var(--note-bg); border:1px solid var(--note-border); border-radius:8px; padding:10px 14px; font-size:13.5px; white-space:pre-line;}
+  .doclink{display:inline-block; margin-top:4px; color:var(--accent); font-size:13.5px; text-decoration:none;}
+  .doclink:hover{text-decoration:underline;}
+  .empty{text-align:center; color:var(--muted); padding:60px 0; font-size:14px;}
+  footer{max-width:920px; margin:0 auto 40px; padding:0 16px; color:var(--muted); font-size:12.5px; border-top:1px solid var(--border); padding-top:14px;}
+  @media (max-width:600px){
+    .detail{padding:16px;}
+    .row .nm{font-size:13.5px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="logo"><span class="py"></span>PyRef <small>Python 速查手册 · 关键字 / 内置函数 / 标准库 / 语法糖</small></div>
+    <div class="searchbox">
+      <input id="q" type="text" placeholder="输入名称搜索，如 operator、yield、f-string、推导式…" autocomplete="off" spellcheck="false">
+      <kbd>/</kbd>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+<main>
+  <div id="list-view"></div>
+  <div id="detail-view" hidden></div>
+</main>
+<footer>
+  PyRef · 条目为速查摘要（示例基于 Python 3.8+，带版本角标的为新语法）· 完整内容请点各条目「官方文档」· 本页为单文件，可离线使用
+</footer>
+
+<script>
+/* ===================== 数据区：想加条目就在对应数组里照格式加 ===================== */
+const DATA = {
+keyword: [
+{n:"def", d:"定义函数（含各类参数写法）", syn:"def 函数名(位置参数, 默认参数=值, *args, 关键字仅限参数, **kwargs):",
+ex:[{t:"参数种类一次看全", c:`def demo(a, b=1, *args, c, **kwargs):
+    print(a, b, args, c, kwargs)
+
+demo(1, 2, 3, 4, c=5, x=6, y=7)
+# 1 2 (3, 4) 5 {'x': 6, 'y': 7}`},
+{t:"返回多个值 = 返回元组", c:`def min_max(nums):
+    return min(nums), max(nums)   # 打包成元组
+
+lo, hi = min_max([3, 1, 4, 1, 5])
+print(lo, hi)   # 1 5`}],
+note:"⚠️ 默认参数别用可变对象：def f(x, lst=[]) 的 lst 会在多次调用间共享。用 lst=None 然后 lst = lst or []。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/controlflow.html#defining-functions", tags:["函数","参数","args","kwargs"]},
+{n:"lambda", d:"匿名函数（单表达式）", syn:"lambda 参数: 表达式",
+ex:[{t:"常用作排序 key", c:`users = [("张三", 25), ("李四", 19), ("王五", 31)]
+by_age = sorted(users, key=lambda u: u[1])
+print(by_age)   # [('李四', 19), ('张三', 25), ('王五', 31)]`}],
+note:"只能是单个表达式，不能写语句。复杂逻辑请用 def。与 operator.itemgetter 搭配可更简洁：key=operator.itemgetter(1)。",
+doc:"https://docs.python.org/zh-cn/3/reference/expressions.html#lambda", tags:["匿名函数","函数"]},
+{n:"class", d:"定义类", syn:"class 类名(父类):\n    def __init__(self, 参数): ...",
+ex:[{t:"一个够用的完整模板", c:`class Animal:
+    def __init__(self, name):
+        self.name = name
+    def speak(self):
+        return f"{self.name} 在叫"
+
+class Dog(Animal):                      # 继承
+    def __init__(self, name, breed):
+        super().__init__(name)          # 调父类构造
+        self.breed = breed
+    def speak(self):                    # 方法重写
+        return f"{self.name} 汪汪"
+    @classmethod
+    def create(cls, name):              # 工厂方法
+        return cls(name, "田园犬")
+    @property
+    def info(self):                     # 属性化调用（不加括号）
+        return f"{self.breed}-{self.name}"
+
+d = Dog.create("旺财")
+print(d.speak())   # 旺财 汪汪
+print(d.info)      # 田园犬-旺财（注意没有括号）`}],
+note:"简单数据类用 @dataclass 更省事（另查 dataclasses）。__repr__ 控制打印样式；__eq__ 控制 == 行为。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/classes.html", tags:["类","对象","面向对象","oop","继承"]},
+{n:"import / from", d:"导入模块或成员", syn:"import 包.模块 as 别名\nfrom 模块 import 名字1, 名字2 as 别名",
+ex:[{t:"四种常用姿势", c:`import os                        # 用 os.getcwd()
+import numpy as np               # 起别名
+from pathlib import Path         # 直接用 Path
+from datetime import datetime, timedelta   # 导入多个`},
+{t:"相对导入（包内部）", c:`from . import utils      # 同级模块
+from ..models import User  # 上一层`}],
+note:"import 会执行目标模块的顶层代码（所以入口逻辑要放在 if __name__ == '__main__': 里）。循环导入会报错，需拆模块。",
+doc:"https://docs.python.org/zh-cn/3/reference/simple_stmts.html#the-import-statement", tags:["导入","模块","from"]},
+{n:"if / elif / else", d:"条件分支", syn:"if 条件:\n    ...\nelif 条件2:\n    ...\nelse:\n    ...",
+ex:[{t:"基础", c:`score = 85
+if score >= 90:
+    level = "A"
+elif score >= 80:
+    level = "B"   # 命中这里
+else:
+    level = "C"
+print(level)   # B`}],
+note:"三元表达式（另查「三元表达式」）适合简单赋值分支。条件判断真值规则见 bool()。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/controlflow.html#if-statements", tags:["条件","分支"]},
+{n:"for", d:"遍历可迭代对象（含 for-else 技巧）", syn:"for 变量 in 可迭代对象:\n    ...\nelse:            # 没被 break 打断时才执行\n    ...",
+ex:[{t:"遍历 + enumerate 拿下标", c:`fruits = ["苹果", "香蕉", "橙子"]
+for i, fruit in enumerate(fruits, start=1):
+    print(i, fruit)`},
+{t:"for-else：找东西没找到的场景", c:`for u in users:
+    if u["name"] == "张三":
+        print("找到了"); break
+else:
+    print("遍历完都没找到")   # break 才能跳过 else`}],
+note:"不要 range(len(list)) 再取下标，直接 enumerate。倒序遍历用 reversed()。空可迭代对象也允许。",
+doc:"https://docs.python.org/zh-cn/3/reference/compound_stmts.html#the-for-statement", tags:["循环","遍历","foreach"]},
+{n:"while", d:"条件循环", syn:"while 条件:\n    ...\n    break / continue",
+ex:[{t:"while True + break（轮询/主循环模式）", c:`import time
+while True:
+    msg = get_task()
+    if msg is None:
+        break
+    handle(msg)
+    time.sleep(1)`}],
+note:"小心写成死循环：确保循环体内有改变条件的语句。while 也能接 else（同 for-else）。",
+doc:"https://docs.python.org/zh-cn/3/reference/compound_stmts.html#the-while-statement", tags:["循环"]},
+{n:"try / except / else / finally", d:"异常处理完整结构", syn:"try:\n    可能出错的代码\nexcept (类型1, 类型2) as e:\n    处理\nelse:\n    没出错才执行\nfinally:\n    无论如何都执行",
+ex:[{t:"完整结构", c:`def parse(text):
+    try:
+        n = int(text)
+    except ValueError as e:
+        print("不是数字:", e)
+        return None
+    else:
+        return n * 2      # 没异常才走这里
+    finally:
+        print("处理完毕")  # 永远执行
+
+parse("abc")   # 不是数字: invalid literal for int()...
+parse("21")    # 处理完毕 → 返回 42`}],
+note:"只捕获预计到的异常类型，别裸 except:（会连 Ctrl+C 都吞掉）。记录完整堆栈用 logger.exception()（另查 logging）。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/errors.html", tags:["异常","报错","try","except","finally"]},
+{n:"raise", d:"抛出异常", syn:"raise 异常类型(\"消息\")\nraise                    # 在 except 里重新抛出\nraise 新异常 from 原异常",
+ex:[{t:"抛出 + 自定义异常", c:`class BizError(Exception):
+    \"\"\"业务异常\"\"\"
+
+def withdraw(balance, amount):
+    if amount > balance:
+        raise BizError(f"余额不足: {balance} < {amount}")
+    return balance - amount
+
+try:
+    withdraw(100, 200)
+except BizError as e:
+    print(e)   # 余额不足: 100 < 200`}],
+note:"在 except 块里写裸 raise 可以保留原始堆栈继续往上抛。raise A from B 能保留异常链。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/errors.html#raising-exceptions", tags:["异常","抛错"]},
+{n:"with", d:"上下文管理器（自动收尾）", syn:"with 表达式 as 变量:\n    ...",
+ex:[{t:"文件自动关闭", c:`with open("data.txt", encoding="utf-8") as f:
+    text = f.read()
+# 出了 with 块自动 f.close()，即使中途抛异常也关
+
+# 多个上下文一起写
+with open("a.txt") as fa, open("b.txt") as fb:
+    pass`}],
+note:"凡是「用完必须收尾」的东西都优先找 with 版本：文件、锁、数据库连接。自造上下文管理器看 contextlib。",
+doc:"https://docs.python.org/zh-cn/3/reference/compound_stmts.html#the-with-statement", tags:["上下文","with","资源"]},
+{n:"yield", d:"生成器：函数可暂停、逐个产出", syn:"def gen():\n    yield 值\n    yield from 另一个可迭代",
+ex:[{t:"生成器是惰性的，省内存", c:`def countdown(n):
+    print("start")
+    while n > 0:
+        yield n
+        n -= 1
+
+g = countdown(3)     # 不执行任何代码！
+print(next(g))       # start / 3
+print(next(g))       # 2
+print(list(g))       # [1]（接着上次的位置继续）`},
+{t:"yield from 委托给子生成器", c:`def chain_all(a, b):
+    yield from a
+    yield from b
+
+print(list(chain_all([1, 2], [3, 4])))   # [1, 2, 3, 4]`}],
+note:"生成器只能消费一遍，遍历完就空了。处理大文件/大列表用生成器表达式 (x*x for x in range(10**8)) 不会爆内存。",
+doc:"https://docs.python.org/zh-cn/3/reference/expressions.html#yieldexpr", tags:["生成器","generator","yield"]},
+{n:"async / await", d:"协程语法（3.5+）", syn:"async def 函数():\n    await 另一个协程()",
+ex:[{t:"最小可运行示例", c:`import asyncio
+
+async def fetch(name, sec):
+    await asyncio.sleep(sec)          # 模拟 IO 等待
+    return f"{name} 完成"
+
+async def main():
+    # 串行：约 3 秒
+    print(await fetch("A", 1))
+    print(await fetch("B", 2))
+    # 并发：约 2 秒（取最长的）
+    print(await asyncio.gather(fetch("C", 1), fetch("D", 2)))
+
+asyncio.run(main())`}],
+note:"async 函数调用得到的是协程对象，必须 await 或交给事件循环跑。在 async 函数里用了 time.sleep() 会卡住整个循环，要 await asyncio.sleep()。并发编排看 asyncio 条目。",
+doc:"https://docs.python.org/zh-cn/3/reference/coroutines.html", tags:["协程","异步","asyncio","并发"]},
+{n:"return", d:"返回值", syn:"return 表达式\nreturn a, b          # 多值=元组\nreturn               # 等价 return None",
+ex:[{t:"提前返回（卫语句）让代码更平", c:`def check(user):
+    if not user:
+        return "未登录"
+    if user.get("banned"):
+        return "被封禁"
+    return "正常"`}],
+note:"函数没有 return 时隐式返回 None。try/finally 里 finally 的 return 会覆盖 try 的返回值（别这么写）。",
+doc:"https://docs.python.org/zh-cn/3/reference/simple_stmts.html#the-return-statement", tags:["返回"]},
+{n:"break / continue", d:"跳出循环 / 跳过本轮", syn:"break      # 结束整个循环\ncontinue   # 结束本轮，进入下一轮",
+ex:[{t:"", c:`for i in range(10):
+    if i == 3:
+        continue      # 跳过 3
+    if i == 6:
+        break         # 到 6 停止
+    print(i, end=" ")
+# 0 1 2 4 5`}],
+note:"只影响最内层循环。嵌套循环想一次全跳出，用标志位、函数 return、或异常。",
+doc:"https://docs.python.org/zh-cn/3/reference/simple_stmts.html#the-break-statement", tags:["循环","break","continue"]},
+{n:"pass", d:"占位空语句", syn:"pass",
+ex:[{t:"先搭骨架后填肉", c:`class PaymentGateway:
+    def pay(self, order):
+        pass          # TODO: 接入支付渠道
+
+    def refund(self, order):
+        pass`}],
+note:"语法上必须有语句但暂时没内容时用（类/函数/分支体不能为空）。",
+doc:"https://docs.python.org/zh-cn/3/reference/simple_stmts.html#the-pass-statement", tags:["占位"]},
+{n:"None / True / False", d:"三个字面常量", syn:"x = None\nok = True",
+ex:[{t:"判空标准写法", c:`x = None
+if x is None:        # 判 None 用 is，不用 ==
+    print("空")
+
+# falsy 家族：0  0.0  ''  []  {}  set()  None  False
+if not items:        # 列表为空的惯用法
+    print("没有元素")`}],
+note:"bool 是 int 的子类：True + True == 2。is 比较身份（内存地址），== 比较值。小整数缓存只是 CPython 优化，别依赖。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#truth-value-testing", tags:["空","布尔","真值"]},
+{n:"and / or / not", d:"逻辑运算（注意返回的是操作数本身）", syn:"a and b     # a 假返回 a，否则返回 b\na or b      # a 真返回 a，否则返回 b\nnot a",
+ex:[{t:"or 的惯用法：给默认值", c:`name = user_input or "匿名"     # 输入为空字符串时取默认
+
+config = {"debug": False}
+debug = config.get("debug") or False`},
+{t:"and 做安全链式取值", c:`# 前面为假就短路，不会执行后面
+city = user and user.address and user.address.city`}],
+note:"返回的不是布尔值而是操作数！bool(x and y) 才是布尔。逻辑：and 找假、or 找真（都短路）。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#boolean-operations", tags:["逻辑","与或非","短路"]},
+{n:"in / not in", d:"成员判断", syn:"x in 容器",
+ex:[{t:"不同容器的成员判断", c:`3 in [1, 2, 3]        # True（列表：逐个比较，慢）
+"a" in "data"          # True（子串判断）
+"key" in {"k": 1}      # False（dict 判断的是 key，O(1)）
+1 in range(10)         # True（range 按数学判断，不遍历）`}],
+note:"频繁成员判断用 set/dict（哈希 O(1)），别用 list（O(n)）。",
+doc:"https://docs.python.org/zh-cn/3/reference/expressions.html#membership-test-operations", tags:["包含","成员"]},
+{n:"is / is not", d:"同一性判断（同一个对象？）", syn:"a is b     # id(a) == id(b)",
+ex:[{t:"is 与 == 的区别", c:`a = [1, 2]
+b = [1, 2]
+a == b     # True（值相等）
+a is b     # False（两个不同对象）
+
+x = None
+x is None  # True ← 判 None 唯一正确姿势`}],
+note:"== 调 __eq__ 可重载；is 比较内存身份。判 None / 判哨兵对象用 is，其余一律用 ==。",
+doc:"https://docs.python.org/zh-cn/3/reference/expressions.html#is", tags:["同一","身份","等于"]},
+{n:"global / nonlocal", d:"在函数内改外层变量", syn:"global 变量          # 声明使用模块级变量\nnonlocal 变量        # 声明使用外层函数变量",
+ex:[{t:"global", c:`count = 0
+def hit():
+    global count
+    count += 1
+
+hit(); hit()
+print(count)   # 2`},
+{t:"nonlocal（闭包计数器）", c:`def make_counter():
+    n = 0
+    def inc():
+        nonlocal n
+        n += 1
+        return n
+    return inc
+
+c = make_counter()
+c(); c()
+print(c())   # 3`}],
+note:"只是读取外层变量不需要声明。nonlocal 找「最近的外层函数」，global 找「模块级」。",
+doc:"https://docs.python.org/zh-cn/3/reference/simple_stmts.html#the-global-statement", tags:["全局","作用域","闭包"]},
+{n:"del", d:"删除名字 / 元素", syn:"del 变量\ndel 列表[下标] / 字典[key] / 对象.属性",
+ex:[{t:"", c:`d = {"a": 1, "b": 2}
+del d["a"]          # dict 删 key
+lst = [1, 2, 3, 4]
+del lst[1:3]        # 切片删除 → [1, 4]
+x = 10
+del x               # 名字没了，再访问 NameError`}],
+note:"del 删的是「名字绑定」，不保证立刻释放内存（引用计数归零才回收）。字典删除更推荐 d.pop(key, 默认值) 不报错。",
+doc:"https://docs.python.org/zh-cn/3/reference/simple_stmts.html#the-del-statement", tags:["删除"]},
+{n:"assert", d:"断言（调试用）", syn:"assert 条件, \"失败提示消息\"",
+ex:[{t:"", c:`def divide(a, b):
+    assert b != 0, "除数不能为 0"
+    return a / b
+
+divide(1, 0)    # AssertionError: 除数不能为 0`}],
+note:"python -O 运行时 assert 全部被跳过——别用它做生产校验/权限检查，那是 raise 的活。单测里的 assert 是 unittest/pytest 的正常用法。",
+doc:"https://docs.python.org/zh-cn/3/reference/simple_stmts.html#the-assert-statement", tags:["断言","assert","调试"]},
+{n:"as", d:"起别名（三种场景）", syn:"import 模块 as 别名\nexcept 异常 as e\nwith open(...) as f",
+ex:[{t:"", c:`import pandas as pd            # 模块别名
+try:
+    ...
+except ValueError as e:        # 异常对象别名
+    print(e)
+with open("a.txt") as f:       # 上下文变量别名
+    pass`}],
+note:"没有独立语义，永远跟着上面三个语句出现。",
+doc:"https://docs.python.org/zh-cn/3/reference/simple_stmts.html#the-import-statement", tags:["别名","as"]},
+{n:"elif / else", d:"if 的配套分支（详见 if）", d2:"", syn:"见「if / elif / else」", ex:[],
+note:"单独拆出来是为了搜索能命中——完整用法看 if 条目。", tags:["分支"], doc:"https://docs.python.org/zh-cn/3/tutorial/controlflow.html#if-statements"},
+],
+
+builtin: [
+{n:"print", d:"打印（sep / end / file 三个参数最常用）", syn:"print(*values, sep=' ', end='\\n', file=sys.stdout)",
+ex:[{t:"参数演示", c:`print("a", "b", "c")             # a b c
+print("a", "b", sep="-")         # a-b
+print("no newline", end="")      # 不换行
+print("error!", file=sys.stderr) # 打到标准错误`},
+{t:"调试利器 f-string 的 = 号（3.8+）", c:`x, y = 10, 20
+print(f"{x=}, {y=}, {x+y=}")   # x=10, y=20, x+y=30`}],
+note:"print 不写文件、不落日志，正式项目用 logging。多个参数打印比字符串拼接可读性好。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#print", tags:["打印","输出"]},
+{n:"len", d:"长度", syn:"len(s)",
+ex:[{t:"", c:`len("hello")       # 5（字符数，中文也是 1 个）
+len([1, 2, 3])     # 3
+len({"a": 1})      # 3? 不，是 1（key 的个数）
+len(range(10))     # 10（O(1)）`}],
+note:"len(generator) 会 TypeError——生成器没有长度，用 sum(1 for _ in g) 数。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#len", tags:["长度"]},
+{n:"range", d:"整数序列（前闭后开）", syn:"range(stop)\nrange(start, stop, step)",
+ex:[{t:"", c:`list(range(5))          # [0, 1, 2, 3, 4]
+list(range(2, 8))       # [2, 3, 4, 5, 6, 7]
+list(range(10, 0, -2))  # [10, 8, 6, 4, 2]
+list(range(8, 2))       # []（起>=止 且步长为正 → 空）`}],
+note:"range 是惰性对象，不占内存；要列表得 list() 包一下。步长不能为 0。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#range", tags:["range","序列","循环"]},
+{n:"enumerate", d:"遍历时带下标", syn:"enumerate(iterable, start=0)",
+ex:[{t:"", c:`for i, name in enumerate(["a", "b", "c"], start=1):
+    print(i, name)
+# 1 a / 2 b / 3 c
+
+# 不用 enumerate 的反面教材
+for i in range(len(names)): ...   # ❌ 不 Pythonic`}],
+note:"第二参数 start 可让编号从 1 开始（做序号展示很方便）。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#enumerate", tags:["下标","序号"]},
+{n:"zip", d:"并行打包多个序列", syn:"zip(a, b, strict=False)",
+ex:[{t:"打包 / 解包 / 建字典", c:`names = ["a", "b", "c"]
+scores = [90, 80, 70]
+
+list(zip(names, scores))          # [('a', 90), ('b', 80), ('c', 70)]
+dict(zip(names, scores))          # {'a': 90, 'b': 80, 'c': 70}
+
+pairs = list(zip(names, scores))
+zip(*pairs)                       # 解包还原（转置）`}],
+note:"默认按最短的截断；zip(a, b, strict=True)（3.10+）长度不等会直接报错，防静默丢数据。3.10 起也支持初始值 zip(a, b, strict=False)。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#zip", tags:["zip","打包","并行"]},
+{n:"map", d:"对每个元素套用函数（惰性）", syn:"map(func, iterable1, iterable2, ...)",
+ex:[{t:"", c:`list(map(str, [1, 2, 3]))            # ['1', '2', '3']
+list(map(lambda x: x * x, [1, 2, 3]))# [1, 4, 9]
+
+# 两个序列一起
+list(map(lambda a, b: a + b, [1, 2], [10, 20]))  # [11, 22]`}],
+note:"返回惰性 map 对象，套 list() 才能看到内容。多数场景推导式 [f(x) for x in xs] 更好读。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#map", tags:["map","映射"]},
+{n:"filter", d:"过滤元素（惰性）", syn:"filter(判断函数, iterable)",
+ex:[{t:"", c:`list(filter(lambda x: x > 0, [-2, 1, 0, 3]))
+# [1, 3]
+
+# 传 None：过滤掉所有 falsy
+list(filter(None, [0, "", "a", None, [], "b"]))
+# ['a', 'b']`}],
+note:"等价推导式 [x for x in xs if cond(x)]。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#filter", tags:["filter","过滤"]},
+{n:"sorted", d:"排序（返回新列表，不改动原对象）", syn:"sorted(iterable, key=None, reverse=False)",
+ex:[{t:"key 的各种姿势", c:`nums = [3, -1, 2]
+sorted(nums)                      # [-1, 2, 3]
+sorted(nums, reverse=True)        # [3, 2, -1]
+sorted(nums, key=abs)             # [1, 2, -1]（按绝对值）
+
+words = ["Banana", "apple"]
+sorted(words, key=str.lower)      # 不区分大小写
+
+# 排对象/字典列表：lambda 或 operator.itemgetter
+users = [{"name": "b", "age": 20}, {"name": "a", "age": 30}]
+sorted(users, key=lambda u: u["age"])
+sorted(users, key=operator.itemgetter("age"))   # 更快，另查 operator
+
+# 多级排序：key 返回元组
+sorted(users, key=lambda u: (-u["age"], u["name"]))`}],
+note:"列表自带 .sort() 是原地排序返回 None（别写 x = x.sort()）。排序稳定：相同 key 保持原顺序。字典排序：sorted(d.items(), key=lambda kv: kv[1])。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#sorted", tags:["排序","sort"]},
+{n:"reversed", d:"反转序列（惰性）", syn:"reversed(seq)",
+ex:[{t:"", c:`list(reversed([1, 2, 3]))   # [3, 2, 1]
+"".join(reversed("abc"))    # "cba"（字符串反转的正规姿势）`}],
+note:"切片 [::-1] 也能反转但会复制一份；reversed 返回迭代器不复制。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#reversed", tags:["反转"]},
+{n:"sum / min / max", d:"求和 / 最值", syn:"sum(iterable, start=0)\nmin(iterable, key=...)\nmax(a, b, c, key=...)",
+ex:[{t:"", c:`sum([1, 2, 3])              # 6
+sum([1, 2, 3], 10)          # 16（初始值）
+sum(x * x for x in range(4))# 14（生成器直接进 sum）
+
+max([3, 1, 4])              # 4
+max("apple", "banana")      # 'banana'（字典序）
+max(users, key=lambda u: u["age"])   # 按字段取最大对象
+
+min(3, 1, 4)                # 1（多个参数直接比）`}],
+note:"min/max 拿到的是「整个元素」，配 key 用。空序列会 ValueError，可用 default=min([], default=0)。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#sum", tags:["求和","最大","最小","聚合"]},
+{n:"any / all", d:"存在真 / 全为真（短路）", syn:"any(iterable)\nall(iterable)",
+ex:[{t:"", c:`any([0, "", 3])         # True（有一个真就行）
+all([1, "a", []])      # False（有一个假就不行）
+all([])                # True（空序列全为真——数学惯例）
+any(x > 90 for x in scores)   # 有没有超 90 的`}],
+note:"常配生成器表达式用，边遍历边短路，找到答案立刻停。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#any", tags:["any","all","存在","全部"]},
+{n:"abs / round / divmod / pow", d:"数值四小件", syn:"abs(x)\nround(x, ndigits=None)\ndivmod(a, b)   → (商, 余数)\npow(x, y, mod=None)",
+ex:[{t:"", c:`abs(-3.5)          # 3.5
+round(3.14159, 2)   # 3.14
+round(2.5)          # 2  ← 银行家舍入！不是 3
+round(1.5)          # 2
+divmod(17, 5)       # (3, 2)
+pow(2, 10)          # 1024
+pow(2, 100, 1009)   # 三参数=模幂，大数取余超快（RSA 常用）`}],
+note:"round 是「四舍六入五取偶」：小数点后保存用 f\"{x:.2f}\"（字符串格式化）或 decimal 模块要精确十进制。divmod 一次拿商和余。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#round", tags:["绝对值","四舍五入","取整","除法","幂"]},
+{n:"isinstance / issubclass", d:"类型判断", syn:"isinstance(obj, 类型或元组)\nissubclass(子类, 父类)",
+ex:[{t:"", c:`isinstance(3, int)                    # True
+isinstance(True, int)                  # True！bool 是 int 子类
+isinstance(x, (int, float))            # 满足其一即可
+isinstance("s", str)                   # True
+
+from collections.abc import Iterable
+isinstance([1], Iterable)              # True（鸭子类型家族）`}],
+note:"类型判断一律用 isinstance 而不是 type(x) == int（子类会被 == 漏掉）。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#isinstance", tags:["类型","instanceof"]},
+{n:"type / id / hash / repr", d:"对象元信息四小件", syn:"type(obj)\nid(obj)\nhash(obj)\nrepr(obj)",
+ex:[{t:"", c:`type(3.14)            # <class 'float'>
+type(3.14).__name__   # 'float'（日志里常用）
+
+id(x)                 # 对象身份（CPython 即内存地址）
+a is b ⇔ id(a) == id(b)
+
+hash("abc")           # 整数指纹（dict/set 的底层依据）
+repr("abc")           # "'abc'"（带引号，面向开发者）
+str("abc")            # "abc"（面向用户）`}],
+note:"可变对象不可哈希：hash([1]) 报错，所以 list 不能当 dict 的 key，转 tuple 可以。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#type", tags:["类型","id","哈希","repr"]},
+{n:"dir / help / vars", d:"探索对象", syn:"dir(obj)      # 属性名列表\nhelp(obj)      # 交互式帮助\nvars(obj)      # __dict__",
+ex:[{t:"", c:`dir("abc")       # 字符串的全部方法名
+dir(str)         # 类的所有属性
+help(str.format) # 看某方法的文档
+vars(obj)        # 实例属性字典（调试神器）`}],
+note:"交互式解释器里 help() 最直观；jupyter/IDE 悬停也行。调试不知道对象有什么就 dir 它。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#dir", tags:["dir","help","vars","探索"]},
+{n:"str（常用方法）", d:"字符串构造 + 方法速查表", syn:"str(obj)          # 万物转字符串",
+apis:[["s.join(列表)", "拼接（唯一推荐姿势）"], ["s.split(sep, maxsplit)", "切分 → 列表"], ["s.strip() / lstrip / rstrip", "去两端空白（可传要去的字符）"], ["s.replace(old, new, count)", "替换"], ["s.startswith(p) / s.endswith(p)", "前后缀判断，参数可为元组"], ["s.find(sub) / s.index(sub)", "找下标，找不到 find 返 -1 / index 抛错"], ["s.upper / lower / title / capitalize", "大小写"], ["s.zfill(8) / center(w) / ljust / rjust", "对齐补位"], ["s.isdigit / isalpha / isalnum / isspace", "内容判断"], ["s.encode('utf-8')", "→ bytes（str→bytes）"], ["s.format(**kw)", "位置/关键字格式化（f-string 的底层）"], ["s.count(sub) / s.title()", "计数 / 标题化"]],
+ex:[{t:"高频组合", c:`",".join(["a", "b", "c"])        # "a,b,c"
+"1,2,3".split(",")               # ['1', '2', '3']（注意是 str）
+"a b  c".split()                 # ['a', 'b', 'c']（无参=按任意空白）
+"  hi  ".strip()                 # "hi"
+"2026-10-08".split("-")          # ['2026', '10', '08']
+"py".ljust(6, ".")               # "py...."`}],
+note:"字符串不可变！s.replace() 返回新串，必须 s = s.replace(...) 接住。bytes 与 str：b.decode() ↔ s.encode()。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#string-methods", tags:["字符串","string","join","split","文本"]},
+{n:"int / float / bool", d:"数值构造", syn:"int(x, base=10)\nfloat(x)\nbool(x)",
+ex:[{t:"", c:`int("42")           # 42
+int("ff", 16)       # 255（按 16 进制解析）
+int("0b101", 2)     # 5
+int(3.99)           # 3（向零取整，不是 round！）
+float("3.5")        # 3.5
+float("inf")        # 无穷大
+float("nan")        # NaN，注意 nan != nan
+bool([])            # False（空容器都 falsy）`}],
+note:"int(字符串) 抛 ValueError，转换用户输入要 try。浮点数有精度问题：0.1 + 0.2 == 0.3 为 False，精确计算用 decimal。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#int", tags:["整数","浮点","转换","int","float"]},
+{n:"list（常用方法）", d:"列表构造 + 方法速查", syn:"list(iterable)",
+apis:[["lst.append(x)", "尾部加一个元素"], ["lst.extend(可迭代)", "合并另一个序列"], ["lst.insert(i, x)", "指定位置插入"], ["lst.pop(i=-1)", "弹出并返回（默认末尾）"], ["lst.remove(x)", "按值删第一个匹配（没有则 ValueError）"], ["lst.sort(key=, reverse=)", "原地排序，返回 None"], ["lst.reverse()", "原地反转"], ["lst.index(x) / lst.count(x)", "找下标 / 计数"], ["lst.clear() / lst.copy()", "清空 / 浅拷贝"]],
+ex:[{t:"", c:`stack = []
+stack.append(1); stack.append(2)
+stack.pop()            # 2（栈）
+list("abc")            # ['a', 'b', 'c']
+list(range(3))         # [0, 1, 2]
+list(zip(a, b))        # 任意可迭代 → 列表`}],
+note:"b = a 是引用同一列表！拷贝用 a.copy() 或 a[:]（都还是浅拷贝，嵌套结构要 copy.deepcopy）。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#lists", tags:["列表","list","数组","append"]},
+{n:"dict（常用方法）", d:"字典构造 + 方法速查", syn:"dict(**kw) / dict(zip(k, v)) / {**d1, **d2}",
+apis:[["d.get(key, 默认)", "取值，没有不报错"], ["d[key] = v / del d[key]", "设/删（删没有的会 KeyError）"], ["d.pop(key, 默认)", "取出并删除"], ["d.setdefault(key, 默认)", "没有就先设置，返回当前值"], ["d.update(另一个dict)", "批量覆盖合并"], ["d.keys() / values() / items()", "三个视图，可迭代"], ["dict.fromkeys(keys, v)", "批量建同值字典"], ["d | d2（3.9+）", "合并成新字典，不改原字典"]],
+ex:[{t:"最常用三连", c:`d = {"a": 1}
+d.get("b", 0)            # 0（不报错）
+d.setdefault("b", []).append(2)   # 分组惯用法
+
+for k, v in d.items():
+    print(k, v)
+
+# 按值取最大
+max(d.items(), key=lambda kv: kv[1])`}],
+note:"遍历中不要增删字典 key（RuntimeError），要改就先 list(d.items()) 快照。字典 3.7+ 保持插入顺序。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#dict", tags:["字典","dict","map","映射","get"]},
+{n:"set / frozenset", d:"集合（去重 + 集合运算）", syn:"set(iterable)",
+apis:[["s.add(x) / s.remove(x) / s.discard(x)", "remove 没有会报错，discard 不会"], ["a & b / a | b / a - b / a ^ b", "交 / 并 / 差 / 对称差"], ["a.issubset(b) / a.issuperset(b)", "子集 / 超集判断"], ["s.union(b) / s.intersection(b)", "方法版（可用 |  & 代替）"]],
+ex:[{t:"去重是刚需", c:`list(set([1, 2, 2, 3, 3]))   # [1, 2, 3]（顺序不保证）
+
+# 找两个列表的公共元素
+set(a) & set(b)
+
+# 顺序保持的去重
+list(dict.fromkeys([3, 1, 3, 2]))   # [3, 1, 2]`}],
+note:"元素必须可哈希（list 不能进 set，转 tuple）。frozenset 是不可变集合，可以当 dict 的 key。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#set", tags:["集合","set","去重","交集"]},
+{n:"open", d:"打开文件", syn:"open(file, mode='r', encoding=None)",
+apis:[["'r' / 'w' / 'a' / 'x'", "读 / 覆盖写 / 追加写 / 新建写(存在则报错)"], ["'b' 后缀", "二进制模式：'rb' 'wb'（返回 bytes）"], ["'+' 后缀", "读写模式：'r+'"],
+["f.read() / f.read(n)", "全读 / 读 n 字符"], ["f.readline() / f.readlines()", "读一行 / 读所有行成列表"], ["for line in f:", "逐行遍历（大文件唯一正确姿势）"], ["f.write(s) / f.writelines(列表)", "写（write 不会自动加换行）"]],
+ex:[{t:"标准三段式", c:`# 读
+with open("data.txt", encoding="utf-8") as f:
+    text = f.read()
+
+# 写
+with open("out.txt", "w", encoding="utf-8") as f:
+    f.write("第一行\\n")
+
+# 大文件逐行
+with open("big.log", encoding="utf-8") as f:
+    for line in f:
+        process(line)`}],
+note:"文本模式一定写 encoding='utf-8'（Windows 默认 GBK，不写会乱码/炸中文）。写文件后才 close 才真正落盘，所以用 with。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#open", tags:["文件","读写","open","io"]},
+{n:"input", d:"读用户输入（永远返回 str）", syn:"input(提示语)",
+ex:[{t:"", c:`name = input("你叫什么？")
+age = int(input("年龄："))   # 要数字必须自己转
+
+# 一次输多个值
+a, b = input("两个数(空格分隔)：").split()
+a, b = int(a), int(b)`}],
+note:"返回值一定是 str；int() 转换可能 ValueError 要兜住。EOF（Ctrl+D/Z）会抛 EOFError。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#input", tags:["输入","交互"]},
+{n:"format / f-string 桥梁", d:"格式化函数", syn:"format(value, 格式符)",
+ex:[{t:"", c:`format(3.14159, ".2f")     # "3.14"
+format(255, "08b")         # "11111111"
+format(1234567, ",")       # "1,234,567"
+"{}-{}".format(1, 2)       # "1-2"（老写法，现在用 f-string）`}],
+note:"日常用 f-string（另查），format 用于「格式符是变量」的场景。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#format", tags:["格式化","format"]},
+{n:"chr / ord", d:"字符 ↔ 码点", syn:"chr(65)   # 'A'\nord('A')   # 65",
+ex:[{t:"", c:`chr(97)          # 'a'
+chr(20013)       # '中'
+ord("中")        # 20013
+# 字母移位（凯撒密码思路）
+"".join(chr((ord(c) - 97 + 3) % 26 + 97) for c in "abc")`}],
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#chr", tags:["字符","ascii","码点"]},
+{n:"bin / oct / hex", d:"进制转换", syn:"bin(255)  # '0b11111111'\noct(255)  # '0o377'\nhex(255)  # '0xff'",
+ex:[{t:"", c:`bin(10)      # '0b1010'
+hex(255)     # '0xff'
+int("ff", 16)   # 255（回来用 int）
+f"{255:#x}"     # '0xff'（f-string 版）
+f"{255:08b}"    # '11111111'（8 位补零）`}],
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#hex", tags:["进制","二进制","十六"]},
+{n:"getattr 系列", d:"按名字动态取/设/判属性", syn:"getattr(obj, '名字', 默认值)\nsetattr(obj, '名字', 值)\nhasattr(obj, '名字')",
+ex:[{t:"", c:`getattr(str, "upper")            # 拿到方法本体
+getattr(obj, "level", 0)          # 没有属性就给默认
+
+# 反射调用
+method = getattr(obj, f"handle_{msg_type}", None)
+if method:
+    method(msg)
+
+import os
+hasattr(os, "getcwd")     # True`}],
+note:"配置驱动/插件机制的基础。替代丑陋的 if-elif 分发。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#getattr", tags:["反射","动态","getattr","setattr"]},
+{n:"iter / next", d:"迭代器协议", syn:"iter(可迭代)   # 转成迭代器\nnext(迭代器, 默认值)",
+ex:[{t:"", c:`it = iter([1, 2, 3])
+next(it)          # 1
+next(it)          # 2
+next(it, "没了")  # 3
+next(it, "没了")  # "没了"（耗尽给默认，不报 StopIteration）`}],
+note:"for 循环的底层就是 iter() + next()。生成器就是一种迭代器。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#iter", tags:["迭代器","iterator","next"]},
+{n:"super", d:"调用父类（按 MRO）", syn:"super().方法()",
+ex:[{t:"", c:`class Base:
+    def __init__(self, name):
+        self.name = name
+
+class Child(Base):
+    def __init__(self, name, extra):
+        super().__init__(name)   # 先让父类初始化
+        self.extra = extra
+
+    def greet(self):
+        return super().greet() + "!"   # 复用父类实现再加工`}],
+note:"super() 找的是 MRO 顺序的下一个类，不一定是亲生父类（多继承时）。模板方法模式的核心。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#super", tags:["父类","super","继承"]},
+{n:"property / staticmethod / classmethod", d:"三种方法装饰器", syn:"@property            # 访问时像属性\n@staticmethod         # 普通函数放在类里\n@classmethod         # 收到 cls 而非 self",
+ex:[{t:"property：只读属性 + 带校验的 setter", c:`class Account:
+    def __init__(self):
+        self._balance = 0
+
+    @property
+    def balance(self):            # 用 a.balance 读
+        return self._balance
+
+    @balance.setter
+    def balance(self, v):         # 用 a.balance = v 写
+        if v < 0:
+            raise ValueError("余额不能为负")
+        self._balance = v
+
+    @classmethod
+    def from_dict(cls, d):        # a = Account.from_dict({...})
+        acc = cls()
+        acc.balance = d["balance"]
+        return acc
+
+    @staticmethod
+    def validate_amount(n):       # Account.validate_amount(5)
+        return n > 0`}],
+note:"classmethod 最常见的两个用途：工厂方法、修改类级状态。property 让接口从方法变属性不用改调用方。",
+doc:"https://docs.python.org/zh-cn/3/library/functions.html#property", tags:["property","静态方法","类方法","装饰器"]},
+{n:"bytes / bytearray", d:"字节串", syn:"bytes(可迭代或str, encoding)\nb'字面量'",
+ex:[{t:"str ↔ bytes 转换", c:`s = "中文"
+b = s.encode("utf-8")     # b'\\xe4\\xb8\\xad\\xe6\\x96\\x87'
+b.decode("utf-8")         # "中文"
+
+with open("pic.png", "rb") as f:   # 二进制读
+    data = f.read()
+print(b[:4])   # 文件头魔法字节，判断文件类型常用`}],
+note:"网络/文件 IO 的底层都是 bytes。str 是「文本」，bytes 是「原始字节」，跨界必须显式 encode/decode。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#bytes", tags:["字节","bytes","编码","二进制"]},
+],
+
+module: [
+{n:"operator", d:"运算符的函数形式——排序/groupby 的最佳搭档", syn:"import operator",
+apis:[["operator.add / sub / mul / truediv / floordiv / mod / pow", "对应 + - * / // % **"], ["operator.eq / ne / lt / le / gt / ge", "对应 == != < <= > >="], ["operator.and_ / or_ / not_ / xor", "位运算 & | ~ ^"], ["operator.itemgetter(*keys)", "按「下标/key」取值，可一次取多个"], ["operator.attrgetter('a.b')", "按「属性」取值，支持点链"], ["operator.methodcaller('方法名', 参数)", "调用指定方法"], ["operator.contains(seq, x)", "x in seq"], ["operator.countOf / indexOf", "计数 / 找下标"], ["operator.is_ / is_not", "is / is not"]],
+ex:[{t:"itemgetter：排序字典列表（最常用）", c:`from operator import itemgetter
+
+users = [
+    {"name": "张三", "age": 25, "score": 88},
+    {"name": "李四", "age": 19, "score": 95},
+    {"name": "王五", "age": 31, "score": 60},
+]
+
+sorted(users, key=itemgetter("score"))
+# 按 score 升序（比 lambda u: u["score"] 快且短）
+
+sorted(users, key=itemgetter("age", "score"))
+# 多级排序：先年龄再分数（lambda 要写元组，这个直接列）
+
+# 一次取多列（返回元组）
+name_score = itemgetter("name", "score")
+name_score(users[0])   # ('张三', 88)`},
+{t:"attrgetter：排序对象列表", c:`from operator import attrgetter
+
+sorted(products, key=attrgetter("price"))
+attrgetter("owner.name")(order)   # 支持链式取值 order.owner.name`},
+{t:"methodcaller：按方法名调用", c:`from operator import methodcaller
+
+methodcaller("upper")("abc")        # 'ABC'
+sorted(strings, key=methodcaller("lower"))
+
+words = [" banana ", "apple "]
+list(map(methodcaller("strip"), words))   # ['banana', 'apple']`},
+{t:"配合 reduce / sorted 的综合示例", c:`from functools import reduce
+from operator import add, mul
+
+reduce(add, [1, 2, 3, 4])     # 10
+reduce(mul, [1, 2, 3, 4])     # 24`}],
+note:"itemgetter/attrgetter 是 C 实现，比同义 lambda 快 ~20%。记忆法：itemgetter 用 [ ]（下标/key），attrgetter 用 .（属性）。",
+doc:"https://docs.python.org/zh-cn/3/library/operator.html", tags:["operator","运算符","排序","key","itemgetter"]},
+{n:"itertools", d:"迭代器工具箱——for 循环的花式武器库", syn:"import itertools",
+apis:[["itertools.product(*its, repeat=1)", "笛卡尔积（嵌套 for 的扁平化）"], ["itertools.combinations(it, r)", "组合（不重复、无顺序）"], ["itertools.permutations(it, r)", "排列（有顺序）"], ["itertools.combinations_with_replacement(it, r)", "可重复选的组合"], ["itertools.chain(*its) / chain.from_iterable", "串接多个可迭代"], ["itertools.groupby(it, key)", "⚠️ 相邻分组（必须先按 key 排序！）"], ["itertools.islice(it, start, stop, step)", "给迭代器切片（生成器不能用 [1:3]）"], ["itertools.accumulate(it, func)", "前缀累计（默认求和）"], ["itertools.zip_longest(*its, fillvalue=None)", "按最长对齐的 zip"], ["itertools.cycle(it) / repeat(obj, times)", "无限循环 / 重复 n 次"], ["itertools.count(start, step)", "无限计数器"], ["itertools.starmap(func, it)", "解包参数再 map（参数是元组时用）"], ["itertools.takewhile(cond, it) / dropwhile", "条件为真时保留 / 条件首次为假后全要"], ["itertools.filterfalse(cond, it)", "filter 的反面"], ["itertools.tee(it, n)", "把一个迭代器复制成 n 个"]],
+ex:[{t:"product / combinations / permutations：做题神器", c:`from itertools import product, combinations, permutations
+
+list(product("AB", repeat=2))
+# [('A','A'), ('A','B'), ('B','A'), ('B','B')]
+
+list(combinations([1, 2, 3], 2))
+# [(1, 2), (1, 3), (2, 3)]（组合不管顺序）
+
+list(permutations([1, 2, 3], 2))
+# [(1,2), (1,3), (2,1), (2,3), (3,1), (3,2)]`},
+{t:"groupby：相邻分组（最大的坑：必须先排序）", c:`from itertools import groupby
+from operator import itemgetter
+
+users = [
+    {"city": "深圳", "name": "a"},
+    {"city": "广州", "name": "b"},
+    {"city": "深圳", "name": "c"},
+]
+# ⚠️ 先按分组 key 排序，否则同组会被拆成多段！
+users.sort(key=itemgetter("city"))
+for city, group in groupby(users, key=itemgetter("city")):
+    print(city, [u["name"] for u in group])
+# 广州 ['b']
+# 深圳 ['a', 'c']`},
+{t:"accumulate / islice / zip_longest", c:`from itertools import accumulate, islice, zip_longest
+
+list(accumulate([1, 2, 3, 4]))            # [1, 3, 6, 10]
+list(accumulate([1, 2, 3], lambda a, b: a * b))  # [1, 2, 6]
+
+gen = (x * x for x in range(100))
+list(islice(gen, 2, 6))                   # [4, 9, 16, 25]（生成器唯一的切片方式）
+
+list(zip_longest("AB", "123", fillvalue="?"))
+# [('A','1'), ('B','2'), ('?','3')]`},
+{t:"chain：合并多个序列", c:`from itertools import chain
+
+list(chain([1, 2], "ab", range(2)))
+# [1, 2, 'a', 'b', 0, 1]
+
+list(chain.from_iterable([[1, 2], [3], [4, 5]]))
+# [1, 2, 3, 4, 5]（拍平一层）`}],
+note:"全是惰性的——用 list()/for 消费。groupby 的分组结果是共享迭代器，循环内必须先物化（如 list(group)）。",
+doc:"https://docs.python.org/zh-cn/3/library/itertools.html", tags:["itertools","迭代","组合","排列","笛卡尔","groupby"]},
+{n:"functools", d:"函数工具——缓存/偏函数/装饰器配套", syn:"import functools",
+apis:[["@functools.lru_cache(maxsize=128)", "结果缓存（递归提速神键）"], ["@functools.cache", "lru_cache(maxsize=None) 的简写（3.9+）"], ["@functools.cached_property", "实例属性级缓存（只算一次）"], ["functools.reduce(func, it, 初始值)", "滚动聚合（f(f(f(a,b),c),d)）"], ["functools.partial(func, *args)", "冻结部分参数，造新函数"], ["@functools.wraps(func)", "写装饰器必加，保留元信息"], ["functools.cmp_to_key(旧式比较函数)", "把 cmp 转成 key"], ["@functools.total_ordering", "只写 __eq__+__lt__ 自动补全比较"], ["@functools.singledispatch", "按第一个参数类型分派"]],
+ex:[{t:"lru_cache：递归/重复计算提速", c:`from functools import lru_cache
+
+@lru_cache(maxsize=None)     # 或 3.9+ 直接 @cache
+def fib(n):
+    return n if n < 2 else fib(n - 1) + fib(n - 2)
+
+fib(200)   # 没缓存直接递归到天荒地老
+
+# 接口幂等缓存（参数一样直接吃缓存）
+@lru_cache(maxsize=1024)
+def get_user(user_id):
+    return api_call(user_id)
+
+get_user.cache_info()   # CacheInfo(hits=..., misses=...) 观测命中`},
+{t:"wraps：写装饰器的标准模板（背下来）", c:`import functools, time
+
+def timer(func):
+    @functools.wraps(func)              # ⚠️ 不加的话 func.__name__ 变 'wrapper'
+    def wrapper(*args, **kwargs):
+        t0 = time.perf_counter()
+        result = func(*args, **kwargs)
+        print(f"{func.__name__} 耗时 {time.perf_counter()-t0:.4f}s")
+        return result
+    return wrapper
+
+@timer
+def slow():
+    time.sleep(0.1)`},
+{t:"partial：冻结参数", c:`from functools import partial
+
+int2 = partial(int, base=2)
+int2("1010")        # 10
+
+print_json = partial(print, sep=", ")
+print_json("a", "b")   # a, b`},
+{t:"reduce：滚动聚合", c:`from functools import reduce
+reduce(lambda a, b: a + b, [1, 2, 3, 4])           # 10
+reduce(lambda a, b: a + b, [1, 2, 3], 100)         # 106（带初始值）
+reduce(lambda d, k: d.setdefault(k, {}), ["a","b","c"], {})  # 建嵌套字典`}],
+note:"lru_cache 的函数参数必须可哈希（list 参数会炸）。能写成 sum()/max() 的就别用 reduce，可读性优先。",
+doc:"https://docs.python.org/zh-cn/3/library/functools.html", tags:["functools","缓存","reduce","partial","lru_cache","装饰器"]},
+{n:"collections", d:"特种容器——计数/默认值/双端队列/命名元组", syn:"import collections",
+apis:[["Counter(可迭代)", "计数器，Counter(s).most_common(n)"], ["defaultdict(工厂)", "访问不存在的 key 自动造默认值"], ["deque(maxlen=n)", "双端队列，两头 O(1)，可当栈/队列/滑动窗口"], ["namedtuple('名字', 'a b c')", "带字段名的元组"], ["OrderedDict", "有序字典（3.7+ 普通 dict 已有序，用得少了）"], ["ChainMap(d1, d2)", "多字典叠读（配置回退链）"]],
+ex:[{t:"Counter：统计前三", c:`from collections import Counter
+
+words = "apple banana apple cherry banana apple".split()
+c = Counter(words)
+print(c)                # Counter({'apple': 3, 'banana': 2, 'cherry': 1})
+c.most_common(2)        # [('apple', 3), ('banana', 2)]
+c["apple"]              # 3（不存在的 key 返回 0，不报错！）
+c.update("apple apple".split())   # 累加`},
+{t:"defaultdict：分组一气呵成", c:`from collections import defaultdict
+
+groups = defaultdict(list)
+for user in users:
+    groups[user["city"]].append(user["name"])   # 不用先判 key 存不存在
+
+d = defaultdict(int)     # 计数器版
+for ch in "hello":
+    d[ch] += 1`},
+{t:"deque：队列 / 滑动窗口 / 定长历史", c:`from collections import deque
+
+q = deque([1, 2, 3])
+q.append(4); q.appendleft(0)     # deque([0, 1, 2, 3, 4])
+q.pop(); q.popleft()             # 两端都是 O(1)（list.pop(0) 是 O(n)！）
+
+history = deque(maxlen=5)        # 定长：满了自动挤掉最老的
+for i in range(10):
+    history.append(i)
+print(history)   # deque([5, 6, 7, 8, 9], maxlen=5)`},
+{t:"namedtuple：轻量不可变对象", c:`from collections import namedtuple
+
+Point = namedtuple("Point", ["x", "y"])
+p = Point(3, 4)
+print(p.x, p.y)        # 3 4（比 p[0] 可读）
+x, y = p               # 可解包
+p._replace(x=10)       # 「改」要生成新对象（不可变）`}],
+note:"defaultdict 访问即创建（d[k] 会真的把 key 建出来），只想安全读用普通 dict.get()。",
+doc:"https://docs.python.org/zh-cn/3/library/collections.html", tags:["collections","counter","计数","defaultdict","deque","队列","namedtuple"]},
+{n:"dataclasses", d:"数据类——告别手写 __init__", syn:"from dataclasses import dataclass, field",
+apis:[["@dataclass", "自动生成 __init__/__repr__/__eq__"], ["field(default_factory=list)", "可变默认值的正确写法"], ["@dataclass(frozen=True)", "不可变（可哈希、能进 set）"], ["@dataclass(order=True)", "自动生成比较方法，可排序"], ["asdict(obj) / astuple(obj)", "转字典 / 转元组（递归）"], ["replace(obj, **改动)", "复制并改部分字段（frozen 配套）"], ["__post_init__(self)", "初始化后的钩子（校验/派生字段）"]],
+ex:[{t:"基础：8 行顶 30 行", c:`from dataclasses import dataclass, field
+
+@dataclass
+class Student:
+    name: str
+    age: int = 18
+    scores: list = field(default_factory=list)   # ⚠️ 可变默认必须这样写
+
+    def __post_init__(self):
+        if self.age < 0:
+            raise ValueError("年龄不能为负")
+
+s = Student("张三")
+print(s)              # Student(name='张三', age=18, scores=[]) ← repr 免费
+s == Student("张三")  # True ← eq 免费`},
+{t:"frozen + replace：配置对象模式", c:`from dataclasses import dataclass, replace, asdict
+
+@dataclass(frozen=True)
+class Config:
+    host: str = "localhost"
+    port: int = 8000
+
+c = Config(port=9000)
+c2 = replace(c, host="10.0.0.1")   # 生成新对象
+asdict(c2)     # {'host': '10.0.0.1', 'port': 9000}（转 JSON 前的桥）`}],
+note:"3.10+ 支持 @dataclass(kw_only=True)（强制关键字传参）和 slots=True（省内存）。要序列化成 JSON：asdict() 后丢给 json.dumps()。",
+doc:"https://docs.python.org/zh-cn/3/library/dataclasses.html", tags:["dataclass","数据类","pojo","实体"]},
+{n:"pathlib", d:"面向对象的文件路径（替代 os.path）", syn:"from pathlib import Path",
+apis:[["Path('a') / 'b' / 'c.txt'", "路径拼接（/ 运算符）"], ["p.read_text(encoding) / write_text(s)", "读写整个文件"], ["p.exists() / is_file() / is_dir()", "存在性判断"], ["p.glob('*.py') / rglob('*.py')", "通配查找 / 递归查找"], ["p.iterdir()", "列出目录内容"], ["p.mkdir(parents=True, exist_ok=True)", "建目录（两层参数免报错）"], ["p.name / stem / suffix / parent", "文件名 / 无后缀名 / 后缀 / 父目录"], ["p.with_suffix('.md') / with_name('x')", "换后缀 / 换文件名"], ["p.resolve() / absolute()", "转绝对路径"], ["p.stat().st_size / st_mtime", "文件大小 / 修改时间"], ["p.open(mode)", "和 open() 一样用，支持 with"]],
+ex:[{t:"日常操作一条龙", c:`from pathlib import Path
+
+p = Path("data") / "logs" / "app.txt"
+print(p)          # data\\logs\\app.txt（自动适配系统分隔符）
+p.name            # 'app.txt'
+p.stem            # 'app'
+p.suffix          # '.txt'
+p.parent          # data\\logs
+
+# 读（encoding 别忘了）
+text = Path("cfg.ini").read_text(encoding="utf-8")
+
+# 写（覆盖；追加用 p.open('a')）
+Path("out.md").write_text("# hi\\n", encoding="utf-8")
+
+# 递归找所有 py 文件
+for f in Path(".").rglob("*.py"):
+    print(f)`},
+{t:"目录操作", c:`Path("a/b/c").mkdir(parents=True, exist_ok=True)  # 多级一键建
+
+for f in Path(".").iterdir():        # 一级内容
+    if f.is_file():
+        print(f.name)`}],
+note:"write_text 会直接覆盖旧文件！glob 的结果顺序不保证，要排序就 sorted()。3.13 起 Path 新增更现代的用法，但以上 API 全版本稳定。",
+doc:"https://docs.python.org/zh-cn/3/library/pathlib.html", tags:["pathlib","路径","文件","目录","path"]},
+{n:"re", d:"正则表达式", syn:"import re",
+apis:[["re.match(p, s)", "从头匹配（开头不匹配就 None）"], ["re.search(p, s)", "找第一处匹配（不限位置）"], ["re.fullmatch(p, s)", "整个字符串完全匹配"], ["re.findall(p, s)", "所有匹配 → 列表（有组则返回组）"], ["re.finditer(p, s)", "所有匹配 → 迭代器（要位置时用）"], ["re.sub(p, 替换, s, count=0)", "替换（替换里可用 \\1 反向引用）"], ["re.split(p, s)", "按模式切分"], ["m.group(n) / m.groups() / m.group('名字')", "取捕获组"], ["(?P<名字>...)", "命名捕获组"], ["(?:...)", "只分组不捕获"], ["(?=...) / (?!...)", "先行断言：后面是 / 后面不是（不消耗字符）"], ["re.I / re.M / re.S / re.X", "忽略大小写 / ^$按行 / .匹配换行 / 松散模式"], ["re.compile(p)", "预编译（反复使用时提速）"]],
+ex:[{t:"match vs search vs fullmatch（最常混淆）", c:`import re
+
+re.match(r"\\d+", "订单123号")    # None（开头不是数字）
+re.search(r"\\d+", "订单123号")   # <re.Match ...>; .group() → '123'
+re.fullmatch(r"\\d+", "123")      # 匹配；re.fullmatch(r"\\d+", "12a") → None
+
+m = re.search(r"(\\d+)-(\\d+)", "区间 3-18")
+m.group()     # '3-18'（整体）
+m.group(1)    # '3'
+m.groups()    # ('3', '18')`},
+{t:"命名组 + findall + sub", c:`import re
+
+# 命名组：可读性拉满
+m = re.search(r"(?P<year>\\d{4})-(?P<month>\\d{2})", "2026-10-08")
+m["year"], m["month"]      # '2026', '10'
+
+re.findall(r"\\w+@\\w+\\.com", "a@x.com b@y.com")   # ['a@x.com', 'b@y.com']
+
+re.sub(r"\\d+", "N", "订单123，金额45元")   # '订单N，金额N元'
+re.sub(r"(\\w+)@(\\w+)", r"\\2/\\1", "user@host")  # 反向引用 → 'host/user'`},
+{t:"常用模式速查", c:`\\d 数字    \\D 非数字      \\w 字母数字下划线   \\s 空白
+.  任意字符(默认不含换行)   ^ 行首  $ 行尾
+a* 0+次   a+ 1+次   a? 0/1次   a{2,5} 2~5次   .*? 懒惰匹配(尽量少)
+[abc] 字符集  [^abc] 取反  a|b 或
+\\b 单词边界（\\bword\\b 精确找单词）  \\. 转义点号本身`},
+{t:"手机号/邮箱的保守示例", c:`import re
+
+re.fullmatch(r"1[3-9]\\d{9}", phone)          # 手机号格式
+re.search(r"[\\w.+-]+@[\\w-]+\\.[\\w.]+", text) # 粗略邮箱`}],
+note:"拿用户输入拼正则会遇到特殊字符，用 re.escape(s) 转义。性能：循环里反复用同一模式先 re.compile。贪婪默认：.* 要到最长的，加 ? 变懒惰。",
+doc:"https://docs.python.org/zh-cn/3/library/re.html", tags:["re","正则","regex","匹配","替换"]},
+{n:"json", d:"JSON 读写（接口联调必备）", syn:"import json",
+apis:[["json.dumps(obj)", "对象 → JSON 字符串"], ["json.loads(s)", "JSON 字符串 → 对象"], ["json.dump(obj, f) / json.load(f)", "和文件直接打交道（少了 s）"], ["ensure_ascii=False", "中文不转 \\uXXXX（必写！）"], ["indent=2", "美化缩进"], ["default=str", "遇到不认识的类型兜底"], ["sort_keys=True", "按 key 排序（做签名/比对时用）"], ["object_hook=函数", "解析时加工每个 dict"]],
+ex:[{t:"dumps / loads 标准姿势", c:`import json
+
+data = {"name": "张三", "age": 20, "tags": ["qa", "py"]}
+
+s = json.dumps(data, ensure_ascii=False, indent=2)
+print(s)   # 中文正常显示、带缩进
+
+back = json.loads(s)      # 完整还原`},
+{t:"和文件交互", c:`import json
+
+with open("config.json", encoding="utf-8") as f:
+    cfg = json.load(f)                      # 读
+
+with open("out.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)   # 写`},
+{t:"类型对照 + 陷阱", c:`dict↔object  list/tuple↔array  str↔string
+int/float↔number  True↔true  None↔null
+
+# set 不能序列化：
+json.dumps({1, 2})                    # TypeError
+json.dumps(list({1, 2}))              # [1, 2] ✅
+json.dumps({1, 2}, default=str)       # 兜底成字符串
+
+# datetime 也不行：
+from datetime import datetime
+json.dumps({"t": datetime.now()}, default=str)   # '2026-10-08 ...'`}],
+note:"dumps 出来的是【字符串】，别再对它 dumps。loads 报 json.decoder.JSONDecodeError 要兜住（接口测试天天见）。",
+doc:"https://docs.python.org/zh-cn/3/library/json.html", tags:["json","序列化","接口","api"]},
+{n:"datetime", d:"日期时间（含格式化代码表）", syn:"from datetime import datetime, date, timedelta, timezone",
+apis:[["datetime.now() / datetime.utcnow()", "当前时间（utcnow 已不推荐）"], ["datetime.now(timezone.utc)", "带时区的当前 UTC（推荐）"], ["datetime(2026, 10, 8, 9, 30)", "构造指定时间"], ["dt.strftime(fmt)", "格式化成字符串"], ["datetime.strptime(s, fmt)", "字符串解析成 datetime"], ["dt.isoformat()", "标准格式（接口传输用）"], ["dt.date() / dt.time()", "取日期/时间部分"], ["dt + timedelta(days=1, hours=3)", "时间加减"], ["dt1 - dt2", "→ timedelta，.total_seconds()"], ["dt.timestamp() / datetime.fromtimestamp(t)", "Unix 时间戳互转"], ["dt.replace(hour=0, minute=0)", "改某个字段（返回新对象）"]],
+ex:[{t:"格式化 / 解析（背下这张表）", c:`from datetime import datetime
+
+dt = datetime(2026, 10, 8, 9, 30, 5)
+dt.strftime("%Y-%m-%d %H:%M:%S")   # '2026-10-08 09:30:05'
+dt.strftime("%Y/%m/%d %H:%M")      # '2026/10/08 09:30'
+dt.strftime("%A")                  # 'Thursday'（星期英文全称）
+
+datetime.strptime("2026-10-08 09:30", "%Y-%m-%d %H:%M")
+
+# 代码：%Y年 %m月 %d日 %H时 %M分 %S秒 %f微秒
+#       %A/%a 星期全/简 %B/%b 月份全/简 %z 时区 %j 年内第几天`},
+{t:"时间加减与差值", c:`from datetime import datetime, timedelta
+
+now = datetime.now()
+deadline = now + timedelta(days=3, hours=2)
+deadline - now                    # timedelta(days=3, hours=2)
+(deadline - now).total_seconds()  # 262800.0
+
+# 「今天零点」与「7 天前」
+today0 = now.replace(hour=0, minute=0, second=0, microsecond=0)
+week_ago = today0 - timedelta(days=7)`},
+{t:"isoformat：接口间传输标准", c:`datetime.now().isoformat()          # '2026-10-08T09:30:05.123456'
+datetime.fromisoformat("2026-10-08T09:30:00")   # 解析回来`}],
+note:"naive（无时区）和 aware（有时区）时间不能直接比较（TypeError）。存库/传接口统一用 aware 或统一 naive + ISO 格式。",
+doc:"https://docs.python.org/zh-cn/3/library/datetime.html", tags:["datetime","日期","时间","时间戳","格式化"]},
+{n:"time", d:"时间相关（计时用 perf_counter）", syn:"import time",
+apis:[["time.time()", "当前 Unix 时间戳（秒）"], ["time.sleep(sec)", "睡一会儿"], ["time.perf_counter()", "高精度计时器（测耗时候用它！）"], ["time.strftime(fmt, time.localtime())", "格式化"], ["time.localtime(t)", "时间戳 → 本地结构体"]],
+ex:[{t:"测代码耗时", c:`import time
+
+t0 = time.perf_counter()      # ⚠️ 别用 time.time()（精度差）
+do_something()
+cost = time.perf_counter() - t0
+print(f"耗时 {cost*1000:.1f} ms")`},
+{t:"时间戳互转", c:`import time
+time.time()                    # 1762900000.123（毫秒：int(t*1000)）
+time.strftime("%Y-%m-%d", time.localtime())   # '2026-10-08'`}],
+note:"time.sleep() 在协程里会卡死整个事件循环，async 里要 await asyncio.sleep()。计时三兄弟：perf_counter（测耗时）、time()（墙钟）、monotonic()（不受改系统时间影响）。",
+doc:"https://docs.python.org/zh-cn/3/library/time.html", tags:["time","时间","计时","sleep"]},
+{n:"os", d:"系统交互（环境变量/目录/进程）", syn:"import os",
+apis:[["os.getcwd() / os.chdir(p)", "当前目录 / 切目录"], ["os.listdir(p='.')", "列目录（只有名字）"], ["os.environ['KEY'] / os.getenv('K', 默认)", "读环境变量"], ["os.makedirs(p, exist_ok=True)", "递归建目录"], ["os.remove(p) / os.rename(a, b)", "删文件 / 改名（跨目录=移动）"], ["os.walk(top)", "递归遍历（dirpath, dirnames, filenames）"], ["os.system(cmd)", "跑 shell 命令（拿不到输出，用 subprocess）"], ["os.getpid()", "当前进程号"]],
+ex:[{t:"环境变量（配置的标准姿势）", c:`import os
+
+os.getenv("DB_HOST", "localhost")   # 推荐：没有也不炸
+os.environ["TOKEN"]                 # 没有 KeyError
+os.environ["DEBUG"] = "1"           # 设置（仅当前进程）`},
+{t:"walk：递归遍历", c:`import os
+for dirpath, dirnames, filenames in os.walk("."):
+    for fn in filenames:
+        if fn.endswith(".py"):
+            print(os.path.join(dirpath, fn))`}],
+note:"路径拼接用 os.path.join 或 pathlib，别手写 a + '/' + b（Windows 崩）。列目录要带属性用 pathlib.Path.iterdir()。",
+doc:"https://docs.python.org/zh-cn/3/library/os.html", tags:["os","系统","环境变量","遍历"]},
+{n:"os.path", d:"路径工具（新代码建议 pathlib）", syn:"import os.path as p",
+apis:[["p.join(a, b)", "跨平台拼接"], ["p.exists / isfile / isdir", "存在性"], ["p.basename / dirname", "文件名 / 目录部分"], ["p.splitext('a.tar.gz')", "→ ('a.tar', '.gz')（切最后一个后缀）"], ["p.abspath / relpath", "绝对化 / 相对化"], ["p.getsize(f)", "文件字节数"], ["p.normpath", "清理 ./ ../ 等"]],
+ex:[{t:"", c:`import os.path as p
+
+p.join("/data", "logs", "a.txt")   # /data/logs/a.txt（Win 是反斜杠）
+p.basename("/a/b/c.txt")           # 'c.txt'
+p.dirname("/a/b/c.txt")            # '/a/b'
+p.splitext("report.tar.gz")        # ('report.tar', '.gz')`}],
+note:"splitext 只切最后一段后缀，要拿完整主名用 Path(f).stem。",
+doc:"https://docs.python.org/zh-cn/3/library/os.path.html", tags:["os.path","路径"]},
+{n:"sys", d:"解释器交互（argv/退出/路径）", syn:"import sys",
+apis:[["sys.argv", "命令行参数列表，[0] 是脚本名"], ["sys.exit(code)", "退出（0 正常，非 0 异常）"], ["sys.path", "模块搜索路径（导入找不到就改它）"], ["sys.stdin / stdout / stderr", "三个标准流"], ["sys.version", "解释器版本"], ["sys.modules", "已加载模块字典"], ["sys.maxsize", "最大整数（64 位机是 2^63-1）"]],
+ex:[{t:"命令行参数", c:`import sys
+
+# python app.py a.txt --mode=fast
+sys.argv        # ['app.py', 'a.txt', '--mode=fast']
+sys.argv[1:]    # 用户传的参数
+
+# 复杂参数解析直接上 argparse`},
+{t:"导入自己写的模块找不到时", c:`import sys
+sys.path.insert(0, "/my/libs")   # 临时加搜索路径`}],
+note:"print(..., file=sys.stderr) 打错误输出，重定向时不会混进正常结果。",
+doc:"https://docs.python.org/zh-cn/3/library/sys.html", tags:["sys","命令行","argv","退出"]},
+{n:"typing", d:"类型标注（现代 Python 必备）", syn:"from typing import Optional, Callable, TypeVar, Protocol, Literal",
+apis:[["list[int] / dict[str, int]", "内置泛型（3.9+）"], ["int | None", "Optional 的新写法（3.10+）"], ["Optional[X]", "等价 X | None（老写法）"], ["str | int", "等价 Union[str, int]（3.10+）"], ["Callable[[int, str], bool]", "函数类型（参数→返回）"], ["TypeVar('T') + Generic[T]", "泛型"], ["Protocol", "结构化子类型（鸭子类型的静态版）"], ["Literal['a', 'b']", "只允许字面量"], ["TypedDict", "带类型的 dict"], ["Final", "常量"], ["Any", "任意（逃生舱）"]],
+ex:[{t:"函数 / 变量标注", c:`from typing import Any
+
+def process(items: list[int], flag: bool = False) -> dict[str, Any]:
+    return {"count": len(items), "flag": flag}
+
+names: list[str] = []
+cache: dict[str, int] = {}
+
+def find(key: str) -> int | None:      # 3.10+；3.8 用 Optional[int]
+    return cache.get(key)`},
+{t:"Callable / 泛型 / Literal", c:`from typing import Callable, TypeVar, Generic, Literal
+
+Handler = Callable[[dict], None]      # 起个类型别名
+
+T = TypeVar("T")
+class Box(Generic[T]):
+    def __init__(self, item: T):
+        self.item = item
+
+Mode = Literal["fast", "safe"]        # 只能传这两个词
+def run(mode: Mode = "fast"): ...`},
+{t:"FastAPI 风格（Annotated，接口开发天天写）", c:`from typing import Annotated
+
+def create(q: Annotated[str, "查询关键字"] = "default"): ...`}],
+note:"标注只在静态检查（mypy/IDE）有用，运行时不强制。FastAPI/Pydantic 是例外——它们读标注做校验和文档。",
+doc:"https://docs.python.org/zh-cn/3/library/typing.html", tags:["typing","类型","注解","type hint"]},
+{n:"argparse", d:"命令行参数解析", syn:"import argparse",
+apis:[["parser = argparse.ArgumentParser()", "建解析器"], ["add_argument('位置参数')", "不带 - 的是必填位置参数"], ["add_argument('-n', '--name', ...)", "可选参数，访问 args.name"], ["type=int", "自动转型"], ["default=值", "默认值"], ["choices=[...]", "限定取值"], ["action='store_true'", "开关 flag（-v 出现即 True）"], ["nargs='+'", "吃多个值成列表"], ["parser.parse_args()", "解析 → Namespace 对象"]],
+ex:[{t:"一个完整的 CLI 骨架", c:`import argparse
+
+parser = argparse.ArgumentParser(description="测试数据生成器")
+parser.add_argument("file", help="输出文件路径")           # 位置参数
+parser.add_argument("-n", "--count", type=int, default=10) # 可选
+parser.add_argument("--type", choices=["buy", "rent"], default="buy")
+parser.add_argument("-v", "--verbose", action="store_true")# 开关
+parser.add_argument("--tags", nargs="+", default=[])       # 多值
+
+args = parser.parse_args()
+print(args.file, args.count, args.type, args.verbose, args.tags)
+
+# 用法：
+# python gen.py out.xlsx -n 50 --type rent -v --tags a b
+# --help 自动生成帮助文档`}],
+note:"短参和长参 -n/--count 是同一个参数，访问一律用去横线的长名 args.count。",
+doc:"https://docs.python.org/zh-cn/3/library/argparse.html", tags:["argparse","命令行","cli","参数"]},
+{n:"logging", d:"日志（别再 print 了）", syn:"import logging",
+apis:[["logging.basicConfig(level=, format=, filename=)", "一次性全局配置"], ["logging.getLogger(__name__)", "拿模块级 logger（标准姿势）"], ["logger.debug/info/warning/error", "分级输出"], ["logger.exception(\"msg\")", "在 except 里用：自动带堆栈"], ["format 占位", "%(asctime)s %(levelname)s %(name)s: %(message)s"], ["级别", "DEBUG(10) < INFO(20) < WARNING(30) < ERROR(40) < CRITICAL(50)"]],
+ex:[{t:"最小可用配置", c:`import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+log = logging.getLogger(__name__)
+
+log.info("开始处理")
+log.warning("磁盘剩余 %d%%", 15)    # 用 %s 占位，别用 f-string（惰性格式化）
+
+try:
+    1 / 0
+except ZeroDivisionError:
+    log.exception("计算失败")       # 自动打印完整堆栈`},
+{t:"写到文件", c:`logging.basicConfig(
+    level=logging.DEBUG,
+    filename="app.log",
+    encoding="utf-8",
+    format="%(asctime)s [%(levelname)s] %(message)s",
+)`}],
+note:"basicConfig 只对 root logger 生效且只能调一次（要在最前面调）。pytest 里日志可能不显示，是被框架接管了。",
+doc:"https://docs.python.org/zh-cn/3/howto/logging.html", tags:["logging","日志","log"]},
+{n:"asyncio", d:"异步 IO（并发提速接口/爬虫）", syn:"import asyncio",
+apis:[["asyncio.run(main())", "跑协程（程序唯一入口）"], ["await asyncio.gather(*协程)", "并发跑，等全部完成"], ["await asyncio.sleep(sec)", "异步睡（绝不 time.sleep）"], ["asyncio.create_task(协程)", "立刻调度，稍后 await"], ["await asyncio.wait_for(协程, timeout)", "超时控制"], ["asyncio.as_completed(协程们)", "谁先完成先处理谁"], ["async with asyncio.TaskGroup()（3.11+）", "结构化并发新写法"]],
+ex:[{t:"gather：并发请求（性能差距在这里）", c:`import asyncio, time
+
+async def call(name, sec):
+    await asyncio.sleep(sec)      # 模拟网络 IO
+    return f"{name}:{sec}"
+
+async def main():
+    t0 = time.perf_counter()
+    # 串行：await call("a",1); await call("b",2); await call("c",3) → 6s
+    results = await asyncio.gather(
+        call("a", 1), call("b", 2), call("c", 3)
+    )                             # 并发 → 3s（最长的那个）
+    print(results, f"{time.perf_counter()-t0:.1f}s")
+
+asyncio.run(main())`},
+{t:"超时 + 异常处理", c:`import asyncio
+
+async def slow():
+    await asyncio.sleep(10)
+
+async def main():
+    try:
+        await asyncio.wait_for(slow(), timeout=2.0)
+    except asyncio.TimeoutError:
+        print("超时了")
+
+asyncio.run(main())`},
+{t:"TaskGroup（3.11+ 推荐写法）", c:`async def main():
+    async with asyncio.TaskGroup() as tg:
+        tg.create_task(call("a", 1))
+        tg.create_task(call("b", 2))
+    # 出了 with 全部完成，任何一个抛错都会传播`}],
+note:"asyncio 适合 IO 密集（网络/文件），CPU 密集任务它帮不了（要进程池）。混用库要确认是 async 版（requests→aiohttp/httpx，time.sleep→asyncio.sleep）。",
+doc:"https://docs.python.org/zh-cn/3/library/asyncio.html", tags:["asyncio","异步","并发","协程","gather"]},
+{n:"sqlite3", d:"内置数据库（标准库自带）", syn:"import sqlite3",
+apis:[["sqlite3.connect('x.db')", "连接（文件库；':memory:' 内存库）"], ["conn.execute(sql, 参数)", "执行单条 SQL"], ["conn.executemany(sql, 多组参数)", "批量执行"], ["cursor.fetchall / fetchone / fetchmany(n)", "取结果"], ["conn.commit()", "提交事务（写操作后必须！）"], ["conn.row_factory = sqlite3.Row", "结果按列名取"], ["SQL 占位符 ?", "防注入（永远别 f-string 拼 SQL）"], ["with conn:", "事务块（成功自动 commit）"]],
+ex:[{t:"建表 → 插入 → 查询", c:`import sqlite3
+
+conn = sqlite3.connect("app.db")
+conn.row_factory = sqlite3.Row        # 让结果能按列名取
+
+conn.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        age INTEGER DEFAULT 0
+    )
+""")
+
+# ⚠️ 占位符 ? 防注入
+conn.execute("INSERT INTO users (name, age) VALUES (?, ?)", ("张三", 25))
+conn.executemany("INSERT INTO users (name, age) VALUES (?, ?)",
+                 [("李四", 19), ("王五", 31)])
+conn.commit()                          # 写完必须提交
+
+for row in conn.execute("SELECT * FROM users WHERE age > ?", (20,)):
+    print(row["id"], row["name"], row["age"])
+
+conn.close()`},
+{t:"事务写法", c:`try:
+    with conn:                # 成功自动 commit，异常自动回滚
+        conn.execute("UPDATE users SET age = age + 1 WHERE name = ?", ("张三",))
+except sqlite3.Error as e:
+    print("回滚了:", e)`}],
+note:"with conn: 只管事务不管关连接，结束还是要 conn.close()（或 with closing(...)）。并发写入会锁库，Web 服务建议换 PostgreSQL。",
+doc:"https://docs.python.org/zh-cn/3/library/sqlite3.html", tags:["sqlite","数据库","sql","db"]},
+{n:"subprocess", d:"跑外部命令", syn:"import subprocess",
+apis:[["subprocess.run([命令, 参数], ...)", "跑完等结果（主流选择）"], ["capture_output=True", "收集 stdout/stderr"], ["text=True", "输出按文本（默认 bytes）"], ["check=True", "非 0 退出码抛 CalledProcessError"], ["timeout=秒", "超时杀进程"], ["subprocess.Popen(...)", "高级：边跑边交互/管道"]],
+ex:[{t:"标准姿势", c:`import subprocess
+
+r = subprocess.run(
+    ["git", "log", "--oneline", "-3"],
+    capture_output=True, text=True,   # text=True 拿到 str
+    timeout=10,
+)
+print(r.returncode)   # 0（退出码）
+print(r.stdout)       # 命令输出
+print(r.stderr)       # 错误输出
+
+# 检查失败
+subprocess.run(["ls", "不存在"], capture_output=True, check=True)
+# 抛 CalledProcessError`},
+{t:"shell=True 的边界", c:`subprocess.run("echo hi > out.txt", shell=True)   # 需要管道/重定向时
+
+# ⚠️ 用户输入拼进 shell=True = 命令注入！
+subprocess.run(f"cat {user_input}", shell=True)   # ❌ 危险
+subprocess.run(["cat", user_input])               # ✅ 列表形式自动转义`}],
+note:"跨平台命令（ls/dir）不同，要移植就用 Python 自己做（pathlib/shutil）。宁可列表形式，shell=True 是例外不是默认。",
+doc:"https://docs.python.org/zh-cn/3/library/subprocess.html", tags:["subprocess","shell","命令","执行"]},
+{n:"threading", d:"多线程（IO 等待时有用）", syn:"import threading",
+apis:[["threading.Thread(target=f, args=, daemon=)", "建线程（daemon=主程序不等它）"], ["t.start() / t.join()", "启动 / 等它结束"], ["threading.Lock()", "互斥锁（保护共享数据）"], ["concurrent.futures.ThreadPoolExecutor", "线程池（比裸线程好用，推荐）"]],
+ex:[{t:"基础 + 锁", c:`import threading
+
+counter = 0
+lock = threading.Lock()
+
+def worker():
+    global counter
+    for _ in range(100_000):
+        with lock:            # 不加锁会丢更新！
+            counter += 1
+
+ts = [threading.Thread(target=worker) for _ in range(4)]
+[t.start() for t in ts]
+[t.join() for t in ts]
+print(counter)   # 400000`},
+{t:"线程池（推荐写法）", c:`from concurrent.futures import ThreadPoolExecutor
+
+with ThreadPoolExecutor(max_workers=8) as pool:
+    results = list(pool.map(fetch_url, urls))   # 并发抓取`}],
+note:"GIL：CPU 密集多线程不提速（用 multiprocessing），IO 等待（网络/磁盘）可以。共享可变状态必须加锁。",
+doc:"https://docs.python.org/zh-cn/3/library/threading.html", tags:["threading","线程","多线程","lock","并发"]},
+{n:"contextlib", d:"上下文管理器工具", syn:"import contextlib",
+apis:[["@contextlib.contextmanager", "把生成器变成 with 可用"], ["contextlib.suppress(异常类型)", "安静地忽略指定异常"], ["contextlib.closing(obj)", "with 结束自动调 obj.close()"], ["contextlib.ExitStack()", "动态管理任意多个上下文"], ["contextlib.redirect_stdout(f)", "临时重定向输出"]],
+ex:[{t:"@contextmanager：自定义 with（模板）", c:`from contextlib import contextmanager
+
+@contextmanager
+def timer(label):
+    import time
+    t0 = time.perf_counter()
+    try:
+        yield                       # with 块的内容在这里执行
+    finally:
+        print(f"{label}: {time.perf_counter()-t0:.3f}s")
+
+with timer("处理数据"):
+    data = [i * i for i in range(10**6)]
+# 处理数据: 0.041s`},
+{t:"suppress：消灭 try-pass", c:`from contextlib import suppress
+
+# 以前
+try:
+    os.remove("tmp.txt")
+except FileNotFoundError:
+    pass
+
+# 现在
+with suppress(FileNotFoundError):
+    os.remove("tmp.txt")`}],
+note:"yield 前后分别对应 __enter__/__exit__。业务异常别乱 suppress——只吞预期内的。",
+doc:"https://docs.python.org/zh-cn/3/library/contextlib.html", tags:["contextlib","上下文","with","管理器"]},
+{n:"enum", d:"枚举（魔法数字/字符串的克星）", syn:"from enum import Enum, auto",
+apis:[["class Color(Enum):", "定义枚举类"], ["Color.RED.value / .name", "取值 / 取名"], ["Color(1) / Color['RED']", "按值 / 按名反查"], ["auto()", "自动编号"], ["IntEnum / StrEnum(3.11+)", "可直接当 int/str 用"]],
+ex:[{t:"", c:`from enum import Enum, auto
+
+class OrderStatus(Enum):
+    PENDING = auto()      # 1
+    PAID = auto()         # 2
+    CLOSED = auto()       # 3
+
+OrderStatus.PAID.name     # 'PAID'
+OrderStatus.PAID.value    # 2
+OrderStatus(2)            # <OrderStatus.PAID: 2>
+OrderStatus["PAID"]       # <OrderStatus.PAID: 2>
+
+# if status == OrderStatus.PAID:   ✅ 比较魔法字符串靠谱多了
+# 字符串枚举（3.11+）
+from enum import StrEnum
+class Env(StrEnum):
+    PROD = "prod"         # 可直接 f"当前环境: {Env.PROD}"`}],
+note:"枚举成员是单例，比较用 is 或 == 都行。和字面量互比会 False（除非 IntEnum/StrEnum）。",
+doc:"https://docs.python.org/zh-cn/3/library/enum.html", tags:["enum","枚举","常量"]},
+{n:"copy", d:"浅拷贝 vs 深拷贝", syn:"import copy\ncopy.copy(x)     # 浅\ncopy.deepcopy(x) # 深",
+ex:[{t:"一张图看懂区别", c:`import copy
+
+a = [[1, 2], [3, 4]]
+
+b = a               # 引用：改 b 就是改 a
+c = copy.copy(a)    # 浅拷贝：外层新列表，内层还是共享的！
+d = copy.deepcopy(a)# 深拷贝：里外全新
+
+c[0].append(99)
+print(a)   # [[1, 2, 99], [3, 4]]  ← 被波及！
+print(d)   # [[1, 2], [3, 4]]      # 深拷贝安全`}],
+note:"切片 a[:]、a.copy()、list(a) 都是浅拷贝。嵌套结构要隔离改动，一律 deepcopy。",
+doc:"https://docs.python.org/zh-cn/3/library/copy.html", tags:["copy","拷贝","深拷贝","浅拷贝"]},
+{n:"random", d:"随机（造测试数据必备）", syn:"import random",
+apis:[["random.random()", "0.0 ~ 1.0 小数"], ["random.randint(a, b)", "a ~ b 整数（两头都含！）"], ["random.randrange(a, b, step)", "range 里随机取一个"], ["random.choice(seq) / choices(k=, weights=)", "随机取一个 / 取 k 个（可带权重）"], ["random.shuffle(lst)", "原地洗牌（返回 None！返回 None！）"], ["random.sample(seq, k)", "抽 k 个不重复的"], ["random.uniform(a, b)", "区间随机小数"], ["random.seed(n)", "固定随机种子（复现结果）"]],
+ex:[{t:"造测试数据", c:`import random
+
+random.randint(1, 100)              # 1~100 整数
+random.choice(["通过", "拒绝", "待定"])  # 随机状态
+random.sample(range(100), 5)        # 5 个不重复序号
+random.uniform(10, 99.5)            # 任意区间小数
+
+phones = [f"138{random.randint(10000000, 99999999)}" for _ in range(10)]
+
+random.seed(42)                     # 种子固定 → 每次跑结果一样（断言可复现）`},
+{t:"洗牌的正确姿势", c:`cards = list(range(52))
+random.shuffle(cards)     # ⚠️ 原地修改，返回 None
+# cards = random.shuffle(cards)  ❌ cards 变成 None，经典 bug`}],
+note:"random 是伪随机，安全场景（token/密码）用 secrets 模块。测试想要可复现：开头 random.seed(固定值)。",
+doc:"https://docs.python.org/zh-cn/3/library/random.html", tags:["random","随机","测试数据"]},
+{n:"math", d:"数学函数", syn:"import math",
+apis:[["math.ceil / floor", "向上 / 向下取整（返回 int）"], ["math.sqrt(x)", "平方根（整数根用 math.isqrt）"], ["math.gcd / lcm", "最大公约 / 最小公倍（lcm 3.9+）"], ["math.factorial", "阶乘"], ["math.isclose(a, b)", "浮点近似比较（别用 ==）"], ["math.pi / e / inf / nan", "常量"], ["math.log(x, base) / log2 / log10", "对数"], ["math.isnan(x) / isinf(x)", "判断"]],
+ex:[{t:"", c:`import math
+
+math.ceil(2.1)          # 3
+math.floor(2.9)         # 2
+math.sqrt(16)           # 4.0
+math.isqrt(17)          # 4（整数根）
+math.gcd(12, 18)        # 6
+math.lcm(4, 6)          # 12
+math.isclose(0.1 + 0.2, 0.3)   # True ✅（0.1+0.2==0.3 是 False）`}],
+doc:"https://docs.python.org/zh-cn/3/library/math.html", tags:["math","数学"]},
+{n:"csv", d:"CSV 读写（Excel 交互）", syn:"import csv",
+apis:[["csv.reader(f) / writer(f)", "按行读写（列表）"], ["csv.DictReader(f) / DictWriter(f)", "按表头读写（字典，强烈推荐）"], ["newline=''", "open 时必带（否则多空行）"], ["writer.writeheader()", "先写表头"], ["delimiter=';' / quoting", "分隔符 / 引号策略"]],
+ex:[{t:"Dict 版：读 Excel 导出的表", c:`import csv
+
+with open("users.csv", encoding="utf-8-sig", newline="") as f:
+    for row in csv.DictReader(f):
+        print(row["姓名"], row["手机号"])   # 按表头名取，稳
+
+with open("out.csv", "w", encoding="utf-8-sig", newline="") as f:
+    w = csv.DictWriter(f, fieldnames=["name", "phone"])
+    w.writeheader()
+    w.writerows([{"name": "张三", "phone": "138..."}])`}],
+note:"读 Excel 导出的中文 CSV 用 encoding='utf-8-sig'（去掉 BOM）；写回 Excel 同理。newline='' 不带会每行多一空行。",
+doc:"https://docs.python.org/zh-cn/3/library/csv.html", tags:["csv","excel","表格"]},
+{n:"hashlib", d:"哈希/摘要（MD5、SHA256）", syn:"import hashlib",
+ex:[{t:"字符串 / 文件哈希", c:`import hashlib
+
+hashlib.sha256("abc".encode()).hexdigest()
+# 'ba7816bf8f01cfea414140de5dae2223b00361a3...'
+
+hashlib.md5("abc".encode()).hexdigest()   # '900150983cd24fb0d6963f7d28e17f72'
+
+# 大文件分块读（别一次 read 全部）
+def file_md5(path):
+    m = hashlib.md5()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            m.update(chunk)
+    return m.hexdigest()`}],
+note:"MD5/SHA1 有碰撞，安全场景（密码存储/签名）用 SHA256 起步；做「文件一致性比对/去重」MD5 够用。密码入库要加盐慢哈希（bcrypt/argon2）。",
+doc:"https://docs.python.org/zh-cn/3/library/hashlib.html", tags:["hashlib","md5","sha256","哈希","摘要"]},
+{n:"traceback", d:"堆栈信息（排错/日志）", syn:"import traceback",
+ex:[{t:"把完整堆栈拿到手", c:`import traceback
+
+try:
+    1 / 0
+except Exception:
+    tb = traceback.format_exc()      # 堆栈字符串（可入库/发通知）
+    print(tb)
+    # Traceback (most recent call last):
+    #   File "x.py", line 3, in <module>
+    #     1 / 0
+    # ZeroDivisionError: division by zero
+
+# 打印某个异常的堆栈（不中断）
+traceback.print_exc()`}],
+note:"logging.exception() 内部就是干这个的，用了 logger 就不必手动 traceback。",
+doc:"https://docs.python.org/zh-cn/3/library/traceback.html", tags:["traceback","堆栈","报错"]},
+],
+
+syntax: [
+{n:"f-string", d:"格式化字符串（3.6+，日常首选）", syn:"f\"{表达式:格式符}\"",
+ex:[{t:"常用格式符速查", c:`x = 3.14159; n = 1234567; s = "hi"
+
+f"{x:.2f}"        # '3.14'（两位小数）
+f"{x:.3g}"        # '3.14'（3 位有效数字）
+f"{n:,}"          # '1,234,567'（千分位）
+f"{0.256:.1%}"    # '25.6%'（百分比）
+f"{s:>8}"         # '      hi'（右对齐8位）
+f"{s:<8}"         # 'hi      '（左对齐）
+f"{s:^8}"         # '   hi   '（居中）
+f"{5:04d}"        # '0005'（补零）
+f"{255:x}"        # 'ff'（16进制；X 大写）`},
+{t:"调试神器 = 号（3.8+）", c:`x, y = 10, 20
+print(f"{x=}")        # x=10
+print(f"{x+y=}")       # x+y=30
+print(f"{x=:>6}")      # x=    10（= 和格式符可连用）`},
+{t:"日期直接格式化", c:`from datetime import datetime
+f"{datetime.now():%Y-%m-%d %H:%M}"   # '2026-10-08 09:30'`}],
+note:"3.12 起内层引号可以和外层相同（f\"{d[\"key\"]}\"）；3.8-3.11 内层要换单引号。性能最好、可读性最高，默认都用它。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/inputoutput.html#formatted-string-literals", tags:["fstring","格式化","字符串","f字符串"]},
+{n:"推导式", d:"列表/字典/集合/生成器一行流", syn:"[表达式 for 变量 in 可迭代 if 条件]\n{键: 值 for ...}\n{表达式 for ...}\n(表达式 for ...)",
+ex:[{t:"四连对比", c:`nums = [1, 2, 3, 4, 5, 6]
+
+[x * x for x in nums]                    # [1, 4, 9, 16, 25, 36]
+[x for x in nums if x % 2 == 0]          # [2, 4, 6]
+{x: x * x for x in nums}                 # {1: 1, 2: 4, ...}
+{x % 3 for x in nums}                    # {0, 1, 2}
+
+# 生成器（惰性，不占内存）——注意是圆括号
+g = (x * x for x in range(10**8))
+sum(g)   # 直接消费，不会爆内存`},
+{t:"带 if-else 和嵌套", c:`["偶" if x % 2 == 0 else "奇" for x in nums]
+
+[flatten for row in matrix for flatten in row]   # 双层展开
+# ⚠️ 顺序 = for 的书写顺序（外层在前）
+
+# 处理文件行（真实场景）
+lines = [ln.strip() for ln in open("a.txt") if ln.strip()]`}],
+note:"超过两层嵌套/带复杂逻辑就改回普通 for 循环。生成器表达式作为函数唯一参数时不用加括号：sum(x*x for x in nums)。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/datastructures.html#list-comprehensions", tags:["推导式","列表生成","comprehension","生成器表达式"]},
+{n:"切片", d:"序列裁剪（前闭后开）", syn:"seq[start:stop:step]",
+ex:[{t:"常用切片 idioms", c:`s = [0, 1, 2, 3, 4, 5]
+
+s[2:5]      # [2, 3, 4]
+s[:3]       # [0, 1, 2]（前 3 个）
+s[-3:]      # [3, 4, 5]（后 3 个）
+s[::2]      # [0, 2, 4]（隔一个取）
+s[::-1]     # [5, 4, 3, 2, 1, 0]（反转）
+s[1:4] = [9, 9]      # 切片赋值（长度可不同 → [0, 9, 9, 4, 5]）
+
+"hello"[1:4]         # 'ell'
+"abc"[::-1]          # 'cba'`}],
+note:"切出来的是新对象（浅拷贝）。start/stop 越界不报错，自动夹到边界。",
+doc:"https://docs.python.org/zh-cn/3/library/stdtypes.html#common-sequence-operations", tags:["切片","slice","截取","反转"]},
+{n:"解包", d:"星号解包全家桶", syn:"a, b = b, a\nfirst, *rest = seq\nf(*args, **kwargs)\n{**d1, **d2}",
+ex:[{t:"", c:`a, b = 1, 2
+a, b = b, a              # 交换（不用临时变量）
+
+first, *mid, last = [1, 2, 3, 4, 5]   # 1, [2,3,4], 5
+*init, tail = "hello"                 # ['h','e','l','l'], 'o'
+
+# 函数调用解包
+args = (1, 5)
+kwargs = {"step": 2}
+list(range(*args, **kwargs))          # range(1, 5, 2) → [1, 3]
+
+# 字典合并（3.9+ 也可用 d1 | d2）
+merged = {**defaults, **user_config}  # 后面的覆盖前面
+
+# 元组解包当形参（函数定义侧）
+def point(x, y): ...
+point(*pair)             # 把元组拆成两个参数`}],
+note:"*收集成 list，**收集成 dict。一个赋值语句里 *变量 最多出现一个。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/controlflow.html#unpacking-argument-lists", tags:["解包","星号","unpack","交换"]},
+{n:"三元表达式", d:"一行 if-else 赋值", syn:"值A if 条件 else 值B",
+ex:[{t:"", c:`level = "成年" if age >= 18 else "未成年"
+
+# 链式（别超过一层，不然没法读）
+status = "高" if s >= 90 else "中" if s >= 60 else "低"`}],
+note:"先求值条件：真取左边、假取右边。和 and/or 给默认值的区别：or 在值为 falsy 时也会触发（0 和 \"\" 会被误替换），要求精确就用三元。",
+doc:"https://docs.python.org/zh-cn/3/reference/expressions.html#conditional-expressions", tags:["三元","条件表达式","ifelse"]},
+{n:"海象运算符 :=", d:"边赋值边用（3.8+）", syn:"if (n := len(data)) > 10:",
+ex:[{t:"消灭重复调用", c:`# 老写法：len(data) 调两次
+if len(data) > 10:
+    print(f"太长了: {len(data)}")
+
+# 海象：赋值+判断一步
+if (n := len(data)) > 10:
+    print(f"太长了: {n}")`},
+{t:"while 读数据的经典姿势", c:`while (chunk := f.read(8192)):
+    process(chunk)     # 读到空串自然结束`}],
+note:"必须带括号（运算符优先级低）。场景：表达式结果要重复用一次以上才有价值，单纯赋值别用它。",
+doc:"https://docs.python.org/zh-cn/3/whatsnew/3.8.html#assignment-expressions", tags:["海象","walrus","赋值表达式"]},
+{n:"match-case", d:"结构模式匹配（3.10+）", syn:"match 变量:\n    case 模式1: ...\n    case _: ...",
+ex:[{t:"从 if-elif 链升级", c:`def handle(cmd):
+    match cmd.split():
+        case ["quit"]:
+            return "退出"
+        case ["load", filename]:
+            return f"加载 {filename}"        # 自动捕获进变量
+        case ["save", filename] | ["dump", filename]:   # 或模式
+            return f"保存 {filename}"
+        case ["drop", *rest]:                # 序列模式 + 剩余
+            return f"丢弃 {rest}"
+        case _:
+            return "未知命令"`},
+{t:"字典/类模式 + 守卫", c:`match event:
+    case {"type": "click", "x": x, "y": y}:
+        print(f"点击 ({x},{y})")             # 按结构解包 dict
+    case {"type": "key", "key": k} if k in "wasd":
+        print(f"移动 {k}")                   # if 守卫
+    case ClickEvent(pos=p):                  # 类模式
+        print(p)
+    case _:
+        pass`}],
+note:"case 里的裸名字是「捕获变量」不是相等比较！要按值匹配用 case 10 / case \"quit\" 或枚举成员。匹配后不 fall-through。",
+doc:"https://docs.python.org/zh-cn/3/tutorial/controlflow.html#match-statements", tags:["match","case","模式匹配","switch"]},
+{n:"装饰器 @", d:"给函数套壳（日志/缓存/重试/鉴权）", syn:"@装饰器名\ndef f(): ...",
+ex:[{t:"没有参数的装饰器（标准模板）", c:`import functools
+
+def retry(times=3):                          # 带参数 → 三层
+    def deco(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for i in range(times):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    last = e
+            raise last
+        return wrapper
+    return deco
+
+@retry(times=5)
+def call_api(): ...        # 调用失败自动重试 5 次`},
+{t:"叠罗汉 + 等价形式", c:`@a
+@b
+def f(): ...
+
+# 等价于 f = a(b(f))，从下往上套，从上往下执行`}],
+note:"手写装饰器必须 @functools.wraps（保住函数名和文档），模板直接抄 functools 条目里的。",
+doc:"https://docs.python.org/zh-cn/3/glossary.html#term-decorator", tags:["装饰器","decorator","aop"]},
+{n:"链式比较", d:"数学式连比", syn:"a < b < c",
+ex:[{t:"", c:`x = 5
+0 < x < 10            # True，等价 (0 < x) and (x < 10)
+# x 只被求值一次！
+
+# 老写法 0 < x and x < 10 啰嗦且 x 求值两次
+# ⚠️ 但别跨类型乱链：x < y <= z 各段独立判断类型`}],
+doc:"https://docs.python.org/zh-cn/3/reference/expressions.html#comparisons", tags:["链式","比较","between"]},
+]
+};
+
+/* ===================== 应用逻辑（一般不用改） ===================== */
+const CATS = [
+  { id:"keyword", label:"关键字 keyword" },
+  { id:"builtin", label:"内置函数 builtins" },
+  { id:"module",  label:"标准库 stdlib" },
+  { id:"syntax",  label:"语法糖 syntax" },
+];
+const ALL = [];
+CATS.forEach(c => (DATA[c.id]||[]).forEach(e => { e.cat = c.id; ALL.push(e); }));
+const $ = s => document.querySelector(s);
+const listView = $("#list-view"), detailView = $("#detail-view"), input = $("#q");
+
+function esc(t){ return t; } // 代码一律走 textContent，无需转义
+
+function score(e, q){
+  const n = e.n.toLowerCase();
+  if(n === q) return 200;
+  if(n.startsWith(q)) return 100;
+  if(n.includes(q)) return 60;
+  if((e.tags||[]).some(t => t.toLowerCase().includes(q))) return 40;
+  if((e.d||"").toLowerCase().includes(q)) return 20;
+  return 0;
+}
+
+let results = [], selIdx = -1;
+
+function search(){
+  const q = input.value.trim().toLowerCase();
+  if(!q){ results = ALL.slice(); } else {
+    results = ALL.map(e => [score(e, q), e]).filter(x => x[0] > 0)
+      .sort((a, b) => b[0] - a[0]).map(x => x[1]);
+  }
+  selIdx = -1;
+  renderList(q);
+}
+
+function renderList(q){
+  detailView.hidden = true; listView.hidden = false;
+  let html = "";
+  if(results.length === 0){
+    html = `<div class="empty">没找到「${input.value}」…<br><br>试试英文原名，或去 <a style="color:var(--accent)" href="https://docs.python.org/zh-cn/3/search.html?q=${encodeURIComponent(input.value)}" target="_blank">官方文档搜索 →</a></div>`;
+  } else {
+    CATS.forEach(c => {
+      const items = results.filter(e => e.cat === c.id);
+      if(!items.length) return;
+      html += `<div class="cat-head"><h2>${c.label}</h2><span class="cnt">${items.length}</span></div>`;
+      items.forEach((e, i) => {
+        const gi = results.indexOf(e);
+        html += `<div class="row${gi===selIdx?" sel":""}" data-i="${gi}">
+          <span class="nm">${e.n}</span>
+          ${e.v ? `<span class="vbadge">${e.v}</span>` : ""}
+          <span class="ds">${e.d||""}</span>
+          <span class="badge ${e.cat}" style="margin-left:auto">${catLabel(e.cat)}</span></div>`;
+      });
+    });
+  }
+  listView.innerHTML = html;
+  listView.querySelectorAll(".row").forEach(r => {
+    r.onclick = () => open(+r.dataset.i);
+  });
+  $("#stats").textContent = q === undefined || !input.value.trim()
+    ? `共 ${ALL.length} 条 · 关键字 ${DATA.keyword.length} · 内置函数 ${DATA.builtin.length} · 标准库 ${DATA.module.length} · 语法糖 ${DATA.syntax.length} · ↑↓ 选择，回车打开，Esc 返回`
+    : `找到 ${results.length} 条` + (selIdx>=0 ? `（第 ${selIdx+1} 条高亮）` : "");
+}
+
+function catLabel(c){ return {keyword:"关键字",builtin:"内置",module:"标准库",syntax:"语法"}[c]; }
+
+function cblock(title, code, withCopy=true){
+  return `<div class="cblock">${title?`<div class="ct">${title}</div>`:""}<pre><code></code></pre>${withCopy?'<button class="cbtn">复制</button>':""}</div>`;
+}
+
+function open(i){
+  const e = results[i] || ALL.find(x => x.n === decodeURIComponent(location.hash.slice(1)));
+  if(!e) return;
+  history.replaceState(null, "", "#" + encodeURIComponent(e.n));
+  let h = `<span class="back" id="back">← 返回列表（Esc）</span>
+    <div class="d-title"><h1>${e.n}</h1><span class="badge ${e.cat}">${catLabel(e.cat)}</span>${e.v?`<span class="vbadge">${e.v}</span>`:""}</div>
+    <div class="d-desc">${e.d||""}</div>`;
+  if(e.syn){
+    h += `<div class="sect"><h3>语法</h3>` + cblock("", e.syn, false) + `</div>`;
+  }
+  if(e.apis && e.apis.length){
+    h += `<div class="sect"><h3>API 速查</h3><table class="apis"><tr><th>用法</th><th>说明</th></tr>`;
+    e.apis.forEach(a => h += `<tr><td></td><td>${a[1]}</td></tr>`);
+    h += `</table></div>`;
+  }
+  if(e.ex && e.ex.length){
+    h += `<div class="sect"><h3>示例</h3>`;
+    e.ex.forEach(x => h += cblock(x.t, x.c));
+    h += `</div>`;
+  }
+  if(e.note){
+    h += `<div class="sect"><h3>注意</h3><div class="note">${e.note}</div></div>`;
+  }
+  if(e.doc){
+    h += `<a class="doclink" href="${e.doc}" target="_blank">官方文档 →</a>`;
+  }
+  detailView.innerHTML = h;
+  listView.hidden = true; detailView.hidden = false;
+  // 填充代码与表格（textContent 防注入）
+  const blocks = detailView.querySelectorAll(".cblock");
+  const codes = [];
+  if(e.syn) codes.push(e.syn);
+  (e.ex||[]).forEach(x => codes.push(x.c));
+  let ci = 0;
+  blocks.forEach(b => {
+    const codeEl = b.querySelector("code");
+    codeEl.textContent = codes[ci] !== undefined ? codes[ci] : "";
+    const btn = b.querySelector(".cbtn");
+    if(btn) btn.onclick = () => copyText(codeEl.textContent, btn);
+    ci++;
+  });
+  const apiRows = detailView.querySelectorAll("table.apis tr:has(td)");
+  const apiCells = detailView.querySelectorAll("table.apis td:first-child");
+  (e.apis||[]).forEach((a, idx) => { if(apiCells[idx]) apiCells[idx].textContent = a[0]; });
+  $("#back").onclick = goBack;
+  window.scrollTo(0, 0);
+}
+
+function goBack(){
+  history.replaceState(null, "", location.pathname);
+  detailView.hidden = true; listView.hidden = false;
+}
+
+async function copyText(t, btn){
+  try{ await navigator.clipboard.writeText(t); }
+  catch(err){
+    const ta = document.createElement("textarea");
+    ta.value = t; document.body.appendChild(ta); ta.select();
+    document.execCommand("copy"); ta.remove();
+  }
+  btn.textContent = "已复制 ✓";
+  setTimeout(() => btn.textContent = "复制", 1200);
+}
+
+/* 键盘与交互 */
+input.addEventListener("input", search);
+input.addEventListener("keydown", e => {
+  if(e.key === "ArrowDown" || e.key === "ArrowUp"){
+    e.preventDefault();
+    if(!results.length) return;
+    selIdx = e.key === "ArrowDown" ? Math.min(selIdx + 1, results.length - 1)
+                                   : Math.max(selIdx - 1, 0);
+    renderList();
+    const el = listView.querySelector(".row.sel");
+    if(el) el.scrollIntoView({ block:"nearest" });
+  } else if(e.key === "Enter"){
+    if(results.length) open(selIdx >= 0 ? selIdx : 0);
+  } else if(e.key === "Escape"){
+    if(input.value){ input.value = ""; search(); }
+    else if(!detailView.hidden) goBack();
+  }
+});
+document.addEventListener("keydown", e => {
+  if(e.key === "/" && document.activeElement !== input){
+    e.preventDefault(); input.focus();
+  } else if(e.key === "Escape" && !detailView.hidden && document.activeElement !== input){
+    goBack();
+  }
+});
+
+/* 快捷 chips */
+const CHIP_NAMES = ["operator","itertools","functools","collections","yield","f-string","推导式","re","dataclasses","asyncio","sorted","open"];
+$("#chips").innerHTML = CHIP_NAMES.map(n => `<span class="chip">${n}</span>`).join("");
+document.querySelectorAll(".chip").forEach(c => c.onclick = () => {
+  input.value = c.textContent; search(); input.focus();
+});
+
+/* 初始：支持 #名字 直达（如 index.html#operator） */
+search();
+if(location.hash.length > 1){
+  const name = decodeURIComponent(location.hash.slice(1));
+  const e = ALL.find(x => x.n.toLowerCase() === name.toLowerCase());
+  if(e){ results = ALL; selIdx = ALL.indexOf(e); open(ALL.indexOf(e)); }
+}
+</script>
+</body>
+</html>
