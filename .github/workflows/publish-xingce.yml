@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: xie-good/xingce-site
-          ref: a8eedd80222583ae7b3d58c4ed0d96d10f1470e2
+          ref: e209996ae6c4d8bad6bf6214426a9179c4e2ff41
           path: site-build
           persist-credentials: false
       - uses: actions/setup-node@v6
