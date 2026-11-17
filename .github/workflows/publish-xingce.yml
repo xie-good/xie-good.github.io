@@ -1,0 +1,69 @@
+name: Publish Xingce homepage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-xingce.yml
+      - CNAME
+      - pyref/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: site-build
+    steps:
+      - name: Check out existing website files
+        uses: actions/checkout@v6
+      - name: Check out the pinned question bank website
+        uses: actions/checkout@v6
+        with:
+          repository: xie-good/xingce-site
+          ref: a8eedd80222583ae7b3d58c4ed0d96d10f1470e2
+          path: site-build
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site-build/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm run site:fetch
+      - run: npm run site:test
+      - run: npm run site:build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+      - run: npm run site:verify
+      - name: Preserve the existing Python reference page and domain file
+        working-directory: .
+        run: |
+          cp -R pyref site-build/public/pyref
+          cp CNAME site-build/public/CNAME
+          cmp pyref/index.html site-build/public/pyref/index.html
+          test "$(cat site-build/public/CNAME)" = "lx1120.me"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site-build/public
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish the question bank at the domain root
+        id: deployment
+        uses: actions/deploy-pages@v4
